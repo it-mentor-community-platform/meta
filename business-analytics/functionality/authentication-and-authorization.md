@@ -2,7 +2,6 @@
 
 ## Необходимый контекст
 
-Для понимания дальнейшей информации в этом документе рекомендую ознакомиться со следующими ресурсами:
 - Telegram Mini App init data https://docs.telegram-mini-apps.com/platform/init-data, https://docs.telegram-mini-apps.com/platform/launch-parameters
 - JWT (структура, подпись, claims) - https://auth0.com/docs/secure/tokens/json-web-tokens
 
