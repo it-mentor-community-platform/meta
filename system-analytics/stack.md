@@ -16,6 +16,7 @@
 
 ## Frontend
 
+- Telegram Mini App
 - VueJS
 - Typescript
 - TODO библиотека компонентов для базового UI
