@@ -4,7 +4,7 @@
 
 - Telegram Mini App init data https://docs.telegram-mini-apps.com/platform/init-data, https://docs.telegram-mini-apps.com/platform/launch-parameters
 - JWT (структура, подпись, claims) - https://auth0.com/docs/secure/tokens/json-web-tokens
-- [Бизнес аналитика](business-analytics/functionality/authentication-and-authorization.md) аутентификации и авторизации
+- [Бизнес аналитика](../../../business-analytics/functionality/authentication-and-authorization.md) аутентификации и авторизации
 
 ## Стек
 
