@@ -21,19 +21,18 @@
 ```mermaid
 sequenceDiagram
 autonumber
-actor U as User
-participant T as Telegram Client
-participant F as Mini App Frontend
-participant B as Backend API
+actor U as Пользователь
+participant T as Telegram клиент
+participant F as Mini App
+participant B as Бэкенд
 
-U->>T: Open Mini App
-T->>F: Load URL with GET params (initData)
-F->>B: REST request with initData
-B->>B: Validate initData<br/>Extract Telegram user_id
+U->>T: Открыть Mini App
+T->>F: Загрузить URL с GET параметрами (initData)
+F->>B: REST-запрос с initData
+B->>B: Проверить initData<br/>Извлечь Telegram user_id
 B-->>F: JWT { sub: user_id }
-F->>F: Store JWT
-F->>B: Subsequent requests (Authorization: Bearer JWT)
-B-->>F: Protected resources
+F->>F: Сохранить JWT
+F->>B: Последующие запросы (Authorization: Bearer JWT)
 ```
 
 ## Локальное тестирование
@@ -50,7 +49,6 @@ B-->>F: Protected resources
 
 - Реализовать авторизацию через Telegram init data.
 - Реализовать Dummy авторизацию.
-- Покрыть ручными HTTP тестами REST API эндпоинты авторизации, и тестовые REST API методы, требующие авторизацию.
 
 # Авторизация
 
@@ -61,4 +59,3 @@ B-->>F: Protected resources
 ## Бизнес требования
 
 - Реализовать механизм присвоения ролей токену при его генерации.
-- Покрыть ручными HTTP тестами эндпоинты, требующие различные роли для их вызова.
