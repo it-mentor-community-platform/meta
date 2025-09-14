@@ -23,23 +23,25 @@
 ```mermaid
 erDiagram
     Users {
-        int id "autoincrement"
-        bigint telegram_user_id "64-bit signed"
+        int id "Автоинкремент, primary key"
+        bigint telegram_user_id "64-bit signed, unique index"
     }
 
     Roles {
-        int id PK "autoincrement"
-        string name
+        int id "Автоинкремент, primary key"
+        string name "Unique index"
     }
 
     Users_Roles {
-        int user_id
-        int role_id
+        int user_id "Внешний ключ на Users.id"
+        int role_id "Внешний ключ на Roles.id"
     }
 
     Users ||--o{ Users_Roles : has
     Roles ||--o{ Users_Roles : has
 ```
+
+Дополнение к схеме - необходим unique композитный индекс на колонки `user_id` и `role_id` таблицы `User_Roles`.
 
 ## Схема REST API
 
