@@ -5,7 +5,7 @@
 - Telegram Mini App init data https://docs.telegram-mini-apps.com/platform/init-data, https://docs.telegram-mini-apps.com/platform/launch-parameters
 - JWT (структура, подпись, claims) - https://auth0.com/docs/secure/tokens/json-web-tokens
 
-## Флоу авторизации
+## Аутентификация через Telegram
 
 Так как основным фронтенд клиентом проекта является Telegram Mini App, бэкенд авторизует пользователей через Telegram.
 
@@ -29,13 +29,13 @@ participant B as Бэкенд
 U->>T: Открыть Mini App
 T->>F: Загрузить URL с GET параметрами (initData)
 F->>B: REST-запрос с initData
-B->>B: Проверить initData<br/>Извлечь Telegram user_id
+B->>B: Провалидировать initData<br/>Извлечь Telegram user_id
 B-->>F: JWT { sub: user_id }
 F->>F: Сохранить JWT
 F->>B: Последующие запросы (Authorization: Bearer JWT)
 ```
 
-## Локальное тестирование
+## Dummy авторизация
 
 Авторизация через Telegram init data не очень удобна при локальном тестировании REST API. Для вызова метода авторизации нам необходимо знать init data, что требует наличия Telegram клиента с запущенным Mini App. Без вызова метода авторизации нам не получить токены, необходимые для вызова всех эндпоинтов, которые недоступны неавторизованным пользователям.
 
