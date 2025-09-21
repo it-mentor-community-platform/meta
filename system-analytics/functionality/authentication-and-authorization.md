@@ -11,13 +11,13 @@
 
 ### Шаги
 
-- `POST /auth/by-telegram`, тело содержит `initDataRaw`.
+- `POST /api/auth/by-telegram`, тело содержит `initDataRaw`.
 - Auth Service валидирует initData, извлекает Telegram user id.
 - По Telegram user id проверяем в таблице `Users` существование пользователя в БД.
 - Если не существует - вставляем запись.
 - Генерируем JWT access токен, устанавливаем в заголовок ответа `X-Access-Token`.
 
-Подробнее про требования к эндпоинту `/auth/by-telegram` в [описании](../services/auth-service/index.md) Auth Service.
+Подробнее про требования к эндпоинту `/api/auth/by-telegram` в [описании](../services/auth-service/index.md) Auth Service.
 
 ```mermaid
 sequenceDiagram
@@ -26,7 +26,7 @@ participant C as Telegram Mini App
 participant A as Auth Service
 participant DB as БД (Users)
 
-C->>A: POST /auth/by-telegram (initData)
+C->>A: POST /api/auth/by-telegram (initData)
 A->>A: Валидировать initData<br/>Извлечь Telegram user_id
 A->>DB: Проверить наличие пользователя по Telegram user_id
 alt Пользователь не найден
@@ -42,7 +42,7 @@ A-->>C: Ответ с заголовком X-Access-Token: JWT
 
 ### Требования
 
-- Работа эндпоинта `/auth-by-telegram` соответствует описанному формату и покрыта ручными `.http` тестами - успешный и все неуспешные сценарии.
+- Работа эндпоинта `/api/auth-by-telegram` соответствует описанному формату и покрыта ручными `.http` тестами - успешный и все неуспешные сценарии.
 - Ключ Telegram бота для валидации задаётся через конфиг в `application.yaml` файле. Значение конфигурационного ключа берётся из переменной окружения.
 - Время жизни JWT токена устанавливается через конфиг. Значение по-умолчанию - 30 минут.
 - Секретный ключ для подписи JWT токена устанавливается через конфиг в Auth Service.
@@ -52,17 +52,17 @@ A-->>C: Ответ с заголовком X-Access-Token: JWT
 
 ### Шаги
 
-- `POST /auth/by-dummy`, тело содержит `user_id` (не телеграм!) и `roles`.
+- `POST /api/auth/by-dummy`, тело содержит `user_id` (не телеграм!) и `roles`.
 - Auth Service проверяет существование пользователя. Если не существует  - возвращаем `404 Not Found`.
 - Генерируем JWT access токен, устанавливаем в заголовок ответа `X-Access-Token`.
 
-Подробнее про требования к эндпоинту `/auth/by-dummy` в [описании](../services/auth-service/index.md) Auth Service.
+Подробнее про требования к эндпоинту `/api/auth/by-dummy` в [описании](../services/auth-service/index.md) Auth Service.
 
 ### Требования
 
-- Работа эндпоинта `/auth-by-dummy` соответствует описанному формату и покрыта ручными `.http` тестами - успешный и все неуспешные сценарии.
+- Работа эндпоинта `/api/auth-by-dummy` соответствует описанному формату и покрыта ручными `.http` тестами - успешный и все неуспешные сценарии.
 - Время жизни JWT токена устанавливается через конфиг (тот же что для аутентификации через Telegram). Значение по-умолчанию - 30 минут.
-- Эндпоинт `/auth-by-dummy` недоступен, если приложение запущено с профилем `prod`.
+- Эндпоинт `/api/auth-by-dummy` недоступен, если приложение запущено с профилем `prod`.
 
 ---
 
