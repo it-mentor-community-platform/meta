@@ -43,6 +43,8 @@ erDiagram
 
 Дополнение к схеме - необходим unique композитный индекс на колонки `user_id` и `role_id` таблицы `User_Roles`.
 
+Список ролей перечислен в [бизнес аналитике](../../../business-analytics/functionality/authentication-and-authorization.md) аутентификации и авторизации.
+
 ## Схема REST API
 
 ### Ответ в случае ошибки
