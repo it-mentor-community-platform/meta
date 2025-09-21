@@ -60,7 +60,7 @@ erDiagram
 
 ### Авторизация через Telegram
 
-`POST /auth/by-telegram`
+`POST /api/auth/by-telegram`
 
 Тело запроса (`Content-Type: application-json`)
 ```
@@ -73,13 +73,12 @@ erDiagram
 
 Коды ошибок:
 
-- 400 - ошибки валидации (пример - слишком короткий username)
-- 409 - username занят
+- 400 - ошибки валидации
 - 500 - неизвестная ошибка
 
 ### Авторизация через Dummy метод
 
-`POST /auth/by-dummy`
+`POST /api/auth/by-dummy`
 
 Тело запроса (`Content-Type: application-json`)
 ```
@@ -94,5 +93,26 @@ erDiagram
 Коды ошибок:
 
 - 400 - ошибки валидации (пример - неизвестные системе роли)
-- 409 - username занят
+- 500 - неизвестная ошибка
+
+### Внутренний эндпоинт для создания пользователей
+
+Используется при импорте пользователей из Google Spreadsheet.
+
+`POST /api/auth/internal/user`
+
+Тело запроса (`Content-Type: application-json`)
+```
+{
+  "telegram_user_id": 1,
+  "roles": ["ROLE_1", "ROLE_2"]
+}
+```
+
+Ответ в случае успеха: `201 Created`.
+
+Коды ошибок:
+
+- 400 - ошибки валидации (пример - неизвестные системе роли)
+- 409 - пользователь с таким telegram user id уже существует
 - 500 - неизвестная ошибка
