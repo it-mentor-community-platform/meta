@@ -1,13 +1,13 @@
 # Системная аналитика - аутентификация и авторизация
 
-## Необходимый контекст
+## Аутентификация через Telegram
+
+### Необходимый контекст
 
 - Telegram Mini App init data https://docs.telegram-mini-apps.com/platform/init-data, https://docs.telegram-mini-apps.com/platform/launch-parameters
 - JWT (структура, подпись, claims) - https://auth0.com/docs/secure/tokens/json-web-tokens
 - [Бизнес аналитика](../../business-analytics/functionality/authentication-and-authorization.md) аутентификации и авторизации
 - [Описание](../services/auth-service/index.md) Auth Service - стек, схемы БД и REST API
-
-## Аутентификация через Telegram
 
 ### Шаги
 
@@ -45,6 +45,7 @@ A-->>C: Ответ с заголовком X-Access-Token: JWT
 - Работа эндпоинта `/auth-by-telegram` соответствует описанному формату и покрыта ручными `.http` тестами - успешный и все неуспешные сценарии.
 - Ключ Telegram бота для валидации задаётся через конфиг в `application.yaml` файле. Значение конфигурационного ключа берётся из переменной окружения.
 - Время жизни JWT токена устанавливается через конфиг. Значение по-умолчанию - 30 минут.
+- Секретный ключ для подписи JWT токена устанавливается через конфиг в Auth Service.
 - Валидация подписи покрыта юнит тестами.
 
 ## Dummy аутентификация
@@ -65,4 +66,26 @@ A-->>C: Ответ с заголовком X-Access-Token: JWT
 
 ---
 
-TODO авторизация
+## Авторизация
+
+### Необходимый контекст
+
+- Telegram Mini App init data https://docs.telegram-mini-apps.com/platform/init-data, https://docs.telegram-mini-apps.com/platform/launch-parameters
+- JWT (структура, подпись, claims) - https://auth0.com/docs/secure/tokens/json-web-tokens
+- [Бизнес аналитика](../../business-analytics/functionality/authentication-and-authorization.md) аутентификации и авторизации
+- [Описание](..services/gateway/index.md) Gateway - стек, маршруты, Security
+
+### Шаги
+
+- Gateway принимает запрос на адрес `/api/**`.
+- Gateway валидирует подпись и дату истечения JWT токена, извлекает из него user id и роли и складывает их в кастомные заголовки запроса к микросервису.
+- Gateway проксирует запрос в соответствии с маршрутами.
+
+### Требования
+
+- Маршруты соответствуют спецификации из документации Gateway сервиса.
+- `403 Forbidden` при запросам к `/api/${service}/internal/**` эндпоинтам.
+- Секретный ключ для подписи JWT токена устанавливается через конфиг в Auth Service.
+- Telegram User Id и роли передаются микросервисам в заголовках запросов.
+- Валидация проверяет корректность подписи и факт истечения.
+- Валидация покрыта юнит тестами.
