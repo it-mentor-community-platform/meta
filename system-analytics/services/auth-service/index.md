@@ -47,6 +47,8 @@ erDiagram
 
 ## Схема REST API
 
+Для всех методов передаются [кастомные заголовки запроса](https://github.com/it-mentor-community-platform/meta/blob/main/system-analytics/services/gateway/index.md#%D0%BF%D1%80%D0%B0%D0%B2%D0%B8%D0%BB%D0%B0-security) с Telegram Id и ролями пользователя.
+
 ### Ответ в случае ошибки
 
 Актуально для всех методов.
