@@ -123,7 +123,7 @@ erDiagram
 
 ## Kafka
 
-### `auth.user.created`
+### Producer для топика `auth.user.created`
 
 Сообщение отправляется в топик при создании нового пользователя - при авторизации через Telegram или импорте.
 
