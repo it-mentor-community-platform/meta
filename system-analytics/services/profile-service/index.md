@@ -17,7 +17,7 @@
 
 ```mermaid
 erDiagram
-    Profile {
+    Profiles {
         bigint id PK
         bigint telegram_user_id
     }
@@ -28,7 +28,7 @@ erDiagram
         string detail_value
     }
 
-    Profile ||--o{ Profiles_Details : has
+    Profiles ||--o{ Profiles_Details : has
 
 ```
 
@@ -90,6 +90,7 @@ erDiagram
 Коды ошибок:
 
 - 400 - ошибки валидации (невалидные поля или значения)
+- 404 - профиль текущего пользователя не существует
 - 500 - неизвестная ошибка
 
 ### Внутренний эндпоинт для импорта профилей
@@ -118,4 +119,13 @@ erDiagram
 
 ## Kafka
 
-TODO consumer
+### Consumer для топика `auth.user.created`
+
+Используется для иницилизации профиля пользователя в таблице `Profiles`.
+
+Payload сообщения:
+```
+{
+  "telegram_user_id": bigint
+}
+```
