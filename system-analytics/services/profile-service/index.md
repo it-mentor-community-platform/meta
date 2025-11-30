@@ -105,7 +105,7 @@ erDiagram
   "telegram_user_id": 1,
   "details": {
     "github_profile": "https://github.com/zhukovsd",
-    "telegram_username": "@zhukovsd"
+    "telegram_url": "https://t.me/zhukovsd"
   }
 }
 ```
