@@ -97,7 +97,7 @@ erDiagram
 
 Используется при импорте пользователей из Google Spreadsheet. Поддерживает создание и обновление профиля с деталями.
 
-`POST /api/auth/internal/profile`
+`POST /api/profile/internal/profile`
 
 Тело запроса (`Content-Type: application-json`)
 ```
