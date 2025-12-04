@@ -23,6 +23,8 @@
 
 - `/api` - префикс всех путей
 - `/api/auth/**` - запросы передаются в Auth Service
+- `/api/profile/**` запросы передаются в Profile Service
+- `/api/project/**` запросы передаются в Project Service
 - Если маршрут не найден, отвечаем 404
 
 ## Правила Security
