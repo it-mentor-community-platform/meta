@@ -105,3 +105,21 @@ Telegram id автора знаем из заголовка.
 
 - 500 - неизвестная ошибка
 - 400 - невалидное тело запроса (включая неизвестный тип проекта роадмапа)
+
+## Kafka
+
+### Producer для топика `projects.project.created`
+
+Используется для уведомления других сервисов о создании нового проекта.
+
+Payload сообщения:
+```
+{
+  "author_telegram_user_id": 123,
+  "author_telegram_profile_url": "https://t.me/zhukovsd"
+  "github_repository_url": "https://github.com/zhukovsd/simulation",
+  "programming_language": "Java",
+  "roadmap_project": "SIMULATION",
+  "added_timestamp:" 123
+}
+```
