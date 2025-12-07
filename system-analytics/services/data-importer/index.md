@@ -16,6 +16,7 @@
 Входящие:
 
 - REST эндпоинты
+- Kafka
 
 Исходящие:
 
@@ -61,3 +62,13 @@
 - 403 - у пользователя нет роли `ADMIN`
 
 Обратите внимание, что в Google таблице хранятся Telegram юзернеймы, а при импорте нам нужны ссылки на профиль. Необходимо преобразовать профиль в ссылку, пример `@zhukovsd` -> `https://t.me/zhukovsd`.
+
+## Kafka
+
+### Consumer для топика `projects.project.created`
+
+Consumer group - `data-importer-cg`.
+
+[Описание формата](https://github.com/it-mentor-community-platform/meta/blob/main/system-analytics/services/project-service/index.md#producer-%D0%B4%D0%BB%D1%8F-%D1%82%D0%BE%D0%BF%D0%B8%D0%BA%D0%B0-projectsprojectcreated) сообщения.
+
+[Системная аналитика](https://github.com/it-mentor-community-platform/meta/blob/main/system-analytics/functionality/projects-bookkeeping.md) процесса.
