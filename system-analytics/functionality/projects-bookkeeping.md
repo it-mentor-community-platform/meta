@@ -53,7 +53,7 @@
 - Администратор вызывает команду `/addproject ${:language} ${:project_name}` 
 - В Telegram Bot'е срабатывает handler команды `/addproject` и он вызывает эндпоинт `POST /api/projects/internal/project`, тело содержит введённые пользователем данные и его Telegram user id
 - Project Service сохраяет проект в свою SQL БД. Дата добавления проекта - текущий момент времени
-- Project Service запрашивает у Profile Service данные пользователя (ссылку на Telegram и GitHub профили) пользователя - GET `/api/profile/internal/profile/by-telegram-user-id?id=${:id}`. 
+- Project Service запрашивает у Profile Service данные пользователя (ссылку на Telegram и GitHub профили) пользователя - `GET /api/profile/internal/profile/by-telegram-user-id?id=${:id}`. 
 - Project Service формирует Kafka сообщение для топика `projects.project.created`. Тело содержит введённые пользователем данные, его Telegram user id, ссылки на Telegram и GitHub профили, источник проекта (Telegram bot). Консьюмеры:
   - Telegram Bot игнорирует сообщение потому что источник проекта - Telegram bot
   - Data Importer добавляет в Google таблицу новый проект
