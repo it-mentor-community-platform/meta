@@ -117,6 +117,28 @@ erDiagram
 - 400 - ошибки валидации (невалидные поля)
 - 500 - неизвестная ошибка
 
+### Внутренний эндпоинт поиска профиля по ссылке на GitHub аккаунт
+
+`GET /api/profile/internal/profile/by-github-profile-url?url=${:url}`
+
+Ответ в случае успеха: `200 OK`, тело:
+
+```
+{
+  "telegram_user_id": 1,
+  "details": {
+    "github_profile": "https://github.com/zhukovsd",
+    "telegram_url": "https://t.me/zhukovsd"
+  }
+}
+```
+
+Коды ошибок:
+
+- 400 - ошибки валидации запроса (например, переданная ссылка не является ссылкой на GitHub профиль)
+- 500 - неизвестная ошибка
+- 404 - профиль не найден
+
 ## Kafka
 
 ### Consumer для топика `auth.user.created`
