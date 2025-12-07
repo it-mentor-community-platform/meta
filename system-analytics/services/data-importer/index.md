@@ -63,6 +63,20 @@
 
 Обратите внимание, что в Google таблице хранятся Telegram юзернеймы, а при импорте нам нужны ссылки на профиль. Необходимо преобразовать профиль в ссылку, пример `@zhukovsd` -> `https://t.me/zhukovsd`.
 
+### Запуск импорта проектов
+
+`POST /api/data-importer/start-projects-import`
+
+Метод требует наличия роли `ADMIN`.
+
+[Системная аналитика](https://github.com/it-mentor-community-platform/meta/blob/main/system-analytics/functionality/projects-bookkeeping.md) процесса.
+
+Ответ в случае успеха: `200 OK`.
+
+Коды ошибок:
+- 401 - пользователь неавторизован (в запросе отсутствует заголовок `X-Telegram-User-Id`)
+- 403 - у пользователя нет роли `ADMIN`
+
 ## Kafka
 
 ### Consumer для топика `projects.project.created`
