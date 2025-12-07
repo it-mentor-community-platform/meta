@@ -102,8 +102,8 @@ sequenceDiagram
 - Администратор запускает импорт проектов через `POST /api/data-importer/start-projects-import`
 - Data Importer читает проекты из [таблицы](https://docs.google.com/spreadsheets/d/1E66YrdvO7B_j0Ykge-JJDMtB1RfKhIzN_SsO7UPDbrU/edit?gid=0#gid=0) (лист "Projects")
 - Для каждого проекта, Data Importer делает запрос к Profile Service, чтобы найти пользователя по GitHub профилю - `GET /api/profile/internal/profile/by-github-profile-url?url=${:url}`. Из ответа извлекается Telegram user id автора
-- Data Importer вызывает эндпоинт `POST /api/projects/internal/project`, тело содержит введённые пользователем данные и его Telegram user id
-- Project Service сохраяет проект в свою SQL БД
+- Data Importer вызывает эндпоинт `POST /api/projects/internal/project`, тело содержит введённые пользователем данные и его Telegram user id и timestamp добавления проекта (извлекается из Google таблицы)
+- Project Service сохраяет проект в свою SQL БД. Дата добавления проекта - из запроса
 - Project Service запрашивает у Profile Service данные пользователя (ссылку на Telegram и GitHub профили) пользователя - GET `/api/profile/internal/profile/by-telegram-user-id?id=${:id}`. 
 - Project Service формирует Kafka сообщение для топика `projects.project.created`. Тело содержит введённые пользователем данные, его Telegram user id, ссылки на Telegram и GitHub профили, источник проекта (Data Importer). Консьюмеры:
   - Telegram Bot игнорирует сообщение потому что источник проекта - Data Importer
