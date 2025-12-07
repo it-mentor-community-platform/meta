@@ -15,3 +15,57 @@
 Исходящие:
 - REST вызовы
 - Kafka
+
+## Схема БД
+
+```mermaid
+erDiagram
+    Projects {
+        bigint id PK
+        bigint author_telegram_user_id
+        string github_repository_url
+        string programming_language "Java, Python, ..."
+        string roadmap_project "HANGMAN, SIMULATION, ..., OTHER"
+        bigint added_timestamp "Unix timestamp момента добавления проекта"
+    }
+```
+
+Индексы:
+- Индекс по `author_telegram_user_id` для поиска проектов по автору
+
+## Схема REST API
+
+Для всех методов передаются [кастомные заголовки запроса](https://github.com/it-mentor-community-platform/meta/blob/main/system-analytics/services/gateway/index.md#%D0%BF%D1%80%D0%B0%D0%B2%D0%B8%D0%BB%D0%B0-security) с Telegram Id и ролями пользователя.
+
+### Ответ в случае ошибки
+
+Актуально для всех методов.
+
+Код должен соответствовать ситуации (перечислено ниже), тело:
+```
+{
+  "message": "Текст ошибки"
+}
+```
+
+### Добавление проекта пользователем с фронтенда
+
+`POST /api/projects/project`
+
+Ответ в случае успеха: `201 Created`. Тело:
+
+```
+{
+  "id": 0,
+  "author_telegram_user_id": 123,
+  "github_repository_url": "https://github.com/zhukovsd/simulation",
+  "programming_language": "Java",
+  "roadmap_project": "SIMULATION",
+  "added_timestamp": 123
+}
+```
+
+Коды ошибок:
+
+- 500 - неизвестная ошибка
+- 400 - невалидное тело запроса (включая неизвестный тип проекта роадмапа)
