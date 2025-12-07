@@ -99,7 +99,7 @@ sequenceDiagram
 
 ### Шаги
 
-- Администратор запускает импорт проектов через `POST /api/data-importer/start-profiles-import`
+- Администратор запускает импорт проектов через `POST /api/data-importer/start-projects-import`
 - Data Importer читает проекты из [таблицы](https://docs.google.com/spreadsheets/d/1E66YrdvO7B_j0Ykge-JJDMtB1RfKhIzN_SsO7UPDbrU/edit?gid=0#gid=0) (лист "Projects")
 - Для каждого проекта, Data Importer делает запрос к Profile Service, чтобы найти пользователя по GitHub профилю - `GET /api/profile/internal/profile/by-github-profile-url?url=${:url}`. Из ответа извлекается Telegram user id автора
 - Data Importer вызывает эндпоинт `POST /api/projects/internal/project`, тело содержит введённые пользователем данные и его Telegram user id
@@ -120,7 +120,7 @@ sequenceDiagram
     participant ProfileService as Profile Service
     participant TelegramBot as Telegram Bot
 
-    Admin ->>+ DataImporter: POST /api/data-importer/start-profiles-import<br/>Запуск импорта проектов
+    Admin ->>+ DataImporter: POST /api/data-importer/start-projects-import<br/>Запуск импорта проектов
 
     DataImporter ->>+ GoogleSheet: Чтение списка проектов<br/>из таблицы "Projects"
     GoogleSheet -->>- DataImporter: Данные проектов
