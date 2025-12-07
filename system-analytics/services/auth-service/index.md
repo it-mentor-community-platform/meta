@@ -89,7 +89,8 @@ erDiagram
 ```
 {
   "user_id": 1, // Users.id, а не Users.telegram_user_id!
-  "roles": ["ROLE_1", "ROLE_2"]
+  "roles": ["ROLE_1", "ROLE_2"],
+  "telegram_username": "zhukovsd"
 }
 ```
 
