@@ -33,3 +33,4 @@
 - Извлеченные из токена значения передаются низлежащим микросервисам в заголвоках запросов:
   - `X-Telegram-User-Id` - число, Telegram id пользователя
   - `X-User-Roles` - comma-separated строка с ролями. Пример - `ADMIN,MENTOR`
+  - `X-Telegram-Username` - Telegram username, пример - `zhukovsd`
