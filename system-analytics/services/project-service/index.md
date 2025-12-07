@@ -52,6 +52,20 @@ erDiagram
 
 `POST /api/projects/project`
 
+[Системная аналитика](https://github.com/it-mentor-community-platform/meta/blob/main/system-analytics/functionality/projects-bookkeeping.md#%D0%B4%D0%BE%D0%B1%D0%B0%D0%B2%D0%BB%D0%B5%D0%BD%D0%B8%D0%B5-%D0%BF%D1%80%D0%BE%D0%B5%D0%BA%D1%82%D0%B0-%D1%87%D0%B5%D1%80%D0%B5%D0%B7-telegram-mini-app) по тому, что делает эндпоинт.
+
+Тело запроса:
+
+```
+{
+  "github_repository_url": "https://github.com/zhukovsd/simulation",
+  "programming_language": "Java",
+  "roadmap_project": "SIMULATION"
+}
+```
+
+Telegram id автора знаем из заголовка.
+
 Ответ в случае успеха: `201 Created`. Тело:
 
 ```
@@ -61,9 +75,31 @@ erDiagram
   "github_repository_url": "https://github.com/zhukovsd/simulation",
   "programming_language": "Java",
   "roadmap_project": "SIMULATION",
-  "added_timestamp": 123
+  "added_timestamp:" 123
 }
 ```
+
+Коды ошибок:
+
+- 500 - неизвестная ошибка
+- 400 - невалидное тело запроса (включая неизвестный тип проекта роадмапа)
+
+### Внутренний эндпоинт для добавленяи проекта из Telegram бота или Data Importer
+
+`POST /api/projects/internal/project`
+
+Тело запроса:
+```
+{
+  "author_telegram_user_id": 123,
+  "github_repository_url": "https://github.com/zhukovsd/simulation",
+  "programming_language": "Java",
+  "roadmap_project": "SIMULATION",
+  "added_timestamp:" 123 // опциональный параметр
+}
+```
+
+Ответ в случае успеха: `201 Created`. Тело ответа такое же, как у `POST /api/projects/project`.
 
 Коды ошибок:
 
