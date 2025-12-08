@@ -11,7 +11,7 @@
 - Пользователь добавляет проект через форму в Mini App, указывая ссылку на GitHub репозиторий, язык, какой проекта роадмапа сдаётся, ссылку на деплой (если есть)
 - Mini App совершает POST запрос `/api/projects/project`, тело содержит введённые пользователем данные, Telegram user id можно узнать, посмотрев в subject JWT токена. Gateway направляет запрос к Project Service
 - Project Service сохраяет проект в свою SQL БД. Дата добавления проекта - текущий момент времени
-- Project Service формирует Kafka сообщение для топика `projects.project.created`. Тело содержит введённые пользователем данные, его Telegram user id, ссылки на Telegram и GitHub профили, источник проекта (mini app). Консьюмеры:
+- Project Service формирует Kafka сообщение для топика `projects.project.created`. Тело содержит введённые пользователем данные, его Telegram user id, ссылки на Telegram и GitHub профили, тип источника проекта (mini app). Консьюмеры:
   - Telegram Bot формирует Telegram пост и публикует его в чат
   - Data Importer добавляет в Google таблицу новый проект
   - Profile Service пересчитывает бейджи (ачивки) пользователя, связанные с исполнением проектов
@@ -31,14 +31,14 @@
     ProjectService ->> SQLDB: Сохранение проекта в БД
     ProjectService -->>- MiniApp: 201 Created
 
-    ProjectService ->> ProjectService: Формирование события project.created<br/>(данные проекта + ссылки профилей + источник проекта)
+    ProjectService ->> ProjectService: Формирование события projects.project.created<br/>(данные проекта + ссылки профилей + тип источника проекта)
 
     ProjectService ->> TelegramBot: Отправка события project.created
     TelegramBot ->> Chat: формирование поста и публикация
 
-    ProjectService ->> DataImporter: Отправка события project.created<br/>→ добавить проект в Google таблицу
+    ProjectService ->> DataImporter: Отправка события projects.project.created<br/>→ добавить проект в Google таблицу
 
-    ProjectService ->> ProfileService: Отправка события project.created<br/>→ пересчитать бейджи пользователя
+    ProjectService ->> ProfileService: Отправка события projects.project.created<br/>→ пересчитать бейджи пользователя
   ```
 
 ## Добавление проекта через Telegram Bot
@@ -47,10 +47,10 @@
 
 - Пользователь публикует ссылку на проект в чате сообщества, указывая ссылку на GitHub репозиторий
 - Администратор вызывает команду `/addproject ${:language} ${:project_name}` 
-- В Telegram Bot'е срабатывает handler команды `/addproject` и он вызывает эндпоинт `POST /api/projects/internal/project`, тело содержит введённые пользователем данные и его Telegram user id
+- В Telegram Bot'е срабатывает handler команды `/addproject` и он вызывает эндпоинт `POST /api/projects/internal/project`, тело содержит введённые пользователем данные, его Telegram user id, и тип источника проекта (Telegram bot)
 - Project Service сохраяет проект в свою SQL БД. Дата добавления проекта - текущий момент времени
-- Project Service формирует Kafka сообщение для топика `projects.project.created`. Тело содержит введённые пользователем данные, его Telegram user id, ссылки на Telegram и GitHub профили, источник проекта (Telegram bot). Консьюмеры:
-  - Telegram Bot игнорирует сообщение потому что источник проекта - Telegram bot
+- Project Service формирует Kafka сообщение для топика `projects.project.created`. Тело содержит введённые пользователем данные, его Telegram user id, ссылки на Telegram и GitHub профили, тип источника проекта (Telegram bot). Консьюмеры:
+  - Telegram Bot игнорирует сообщение потому что тип источник проекта - Telegram bot
   - Data Importer добавляет в Google таблицу новый проект
   - Profile Service пересчитывает бейджи (ачивки) пользователя, связанные с исполнением проектов
 
@@ -69,21 +69,21 @@ sequenceDiagram
     Admin ->> Chat: Команда /addproject ${language} ${project_name}
 
     Chat ->>+ TelegramBot: Обработка команды /addproject<br/>+ извлечение данных проекта и telegram_user_id
-    TelegramBot ->>+ ProjectService: POST /api/projects/internal/project<br/>(данные проекта + telegram_user_id)
+    TelegramBot ->>+ ProjectService: POST /api/projects/internal/project<br/>(данные проекта + telegram_user_id<br/>+ тип источника проекта)
 
     ProjectService ->> SQLDB: Сохранение проекта в БД
     ProjectService -->>- TelegramBot: 201 Created
     TelegramBot -->>- Chat: Публикация в чат результата вызова команды
 
-    ProjectService ->> ProjectService: Формирование события project.created<br/>(данные + ссылки профилей + source=Telegram bot)
+    ProjectService ->> ProjectService: Формирование события projects.project.created<br/>(данные + ссылки профилей + source=Telegram bot)
 
-    ProjectService ->> TelegramBot: Событие project.created<br/>(source = Telegram bot)
-    TelegramBot ->> TelegramBot: Игнорирует событие<br/>(источник = Telegram bot)
+    ProjectService ->> TelegramBot: Событие projects.project.created<br/>(source = Telegram bot)
+    TelegramBot ->> TelegramBot: Игнорирует событие<br/>(тип источника = Telegram bot)
 
-    ProjectService ->> DataImporter: Событие project.created<br/>→ добавить проект в Google-таблицу
+    ProjectService ->> DataImporter: Событие projects.project.created<br/>→ добавить проект в Google-таблицу
     DataImporter ->> DataImporter: Добавление строки<br/>в Google-таблицу с проектом
 
-    ProjectService ->> ProfileService: Событие project.created<br/>→ пересчитать бейджи пользователя
+    ProjectService ->> ProfileService: Событие projects.project.created<br/>→ пересчитать бейджи пользователя
     ProfileService ->> ProfileService: Пересчёт бейджей<br/>по проектам пользователя
 ```
 
@@ -96,9 +96,9 @@ sequenceDiagram
 - Для каждого проекта, Data Importer делает запрос к Profile Service, чтобы найти пользователя по GitHub профилю - `GET /api/profile/internal/profile/by-github-profile-url?url=${:url}`. Из ответа извлекается Telegram user id автора и ссылка на Telegram профиль
 - Data Importer вызывает эндпоинт `POST /api/projects/internal/project`, тело содержит введённые пользователем данные и его Telegram user id и timestamp добавления проекта (извлекается из Google таблицы)
 - Project Service сохраяет проект в свою SQL БД. Дата добавления проекта - из запроса
-- Project Service формирует Kafka сообщение для топика `projects.project.created`. Тело содержит введённые пользователем данные, его Telegram user id, ссылки на Telegram и GitHub профили, источник проекта (Data Importer). Консьюмеры:
-  - Telegram Bot игнорирует сообщение потому что источник проекта - Data Importer
-  - Data Importer игнорирует сообщение потому что источник проекта - Data Importer
+- Project Service формирует Kafka сообщение для топика `projects.project.created`. Тело содержит введённые пользователем данные, его Telegram user id, ссылки на Telegram и GitHub профили, тип источника проекта (Data Importer). Консьюмеры:
+  - Telegram Bot игнорирует сообщение потому что тип источника проекта - Data Importer
+  - Data Importer игнорирует сообщение потому что тип источника проекта - Data Importer
   - Profile Service пересчитывает бейджи (ачивки) пользователя, связанные с исполнением проектов
 
 ```mermaid
@@ -120,20 +120,20 @@ sequenceDiagram
         DataImporter ->>+ ProfileService: GET /api/profile/internal/profile/by-github-profile-url<br/>?url=${url}
         ProfileService -->>- DataImporter: Профиль автора проекта
 
-        DataImporter ->>+ ProjectService: POST /api/projects/internal/project<br/>(данные проекта + telegram_user_id)
+        DataImporter ->>+ ProjectService: POST /api/projects/internal/project<br/>(данные проекта + telegram_user_id<br/>+ тип источника проекта)
 
         ProjectService ->> SQLDB: Сохранение проекта в БД
         ProjectService -->>- DataImporter: 201 Created
 
-        ProjectService ->> ProjectService: Формирование события project.created<br/>(source = Data Importer)
+        ProjectService ->> ProjectService: Формирование события projects.project.created<br/>(source = Data Importer)
 
-        ProjectService ->> TelegramBot: Событие project.created<br/>(source = Data Importer)
-        TelegramBot ->> TelegramBot: Игнорирует событие<br/>(источник = Data Importer)
+        ProjectService ->> TelegramBot: Событие projects.project.created<br/>(source = Data Importer)
+        TelegramBot ->> TelegramBot: Игнорирует событие<br/>(тип источника = Data Importer)
 
-        ProjectService ->> DataImporter: Событие project.created<br/>(source = Data Importer)
-        DataImporter ->> DataImporter: Игнорирует событие<br/>(источник = Data Importer)
+        ProjectService ->> DataImporter: Событие projects.project.created<br/>(source = Data Importer)
+        DataImporter ->> DataImporter: Игнорирует событие<br/>(тип источника = Data Importer)
 
-        ProjectService ->> ProfileService: Событие project.created<br/>→ пересчитать бейджи пользователя
+        ProjectService ->> ProfileService: Событие projects.project.created<br/>→ пересчитать бейджи пользователя
         ProfileService ->> ProfileService: Пересчёт бейджей<br/>по проектам пользователя
     end
 ```
