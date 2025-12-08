@@ -97,7 +97,8 @@ Telegram id автора знаем из заголовка.
   "github_repository_url": "https://github.com/zhukovsd/simulation",
   "programming_language": "Java",
   "roadmap_project": "SIMULATION",
-  "added_timestamp:" 123 // опциональный параметр
+  "added_timestamp:" 123, // опциональный параметр
+  "projcet_source_type": "FRONTEND" // FRONTEND, TELEGRAM_BOT, DATA_IMPORTER
 }
 ```
 
@@ -122,6 +123,7 @@ Payload сообщения:
   "github_repository_url": "https://github.com/zhukovsd/simulation",
   "programming_language": "Java",
   "roadmap_project": "SIMULATION",
-  "added_timestamp:" 123
+  "added_timestamp:" 123,
+  "projcet_source_type": "FRONTEND" // FRONTEND, TELEGRAM_BOT, DATA_IMPORTER
 }
 ```
