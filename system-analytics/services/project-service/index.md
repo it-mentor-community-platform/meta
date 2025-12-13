@@ -100,7 +100,7 @@ Telegram id автора знаем из заголовка.
   "programming_language": "Java",
   "roadmap_project": "SIMULATION",
   "added_timestamp:" 123, // опциональный параметр
-  "projcet_source_type": "FRONTEND" // FRONTEND, TELEGRAM_BOT, DATA_IMPORTER
+  "projeсt_source_type": "FRONTEND" // FRONTEND, TELEGRAM_BOT, DATA_IMPORTER
 }
 ```
 
@@ -127,6 +127,6 @@ Payload сообщения:
   "programming_language": "Java",
   "roadmap_project": "SIMULATION",
   "added_timestamp:" 123,
-  "projcet_source_type": "FRONTEND" // FRONTEND, TELEGRAM_BOT, DATA_IMPORTER
+  "projeсt_source_type": "FRONTEND" // FRONTEND, TELEGRAM_BOT, DATA_IMPORTER
 }
 ```
