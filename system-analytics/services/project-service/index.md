@@ -100,7 +100,7 @@ Telegram id автора знаем из заголовка.
   "programming_language": "Java",
   "roadmap_project": "SIMULATION",
   "telegram_user_id": 123,
-  "telegram_username": "zhukovsd,
+  "telegram_username": "zhukovsd",
   "added_timestamp:" 123, // опциональный параметр
   "projeсt_source_type": "FRONTEND" // FRONTEND, TELEGRAM_BOT, DATA_IMPORTER
 }
