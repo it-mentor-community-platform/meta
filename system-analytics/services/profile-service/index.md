@@ -28,12 +28,33 @@ erDiagram
         string detail_value
     }
 
+    Achievments {
+        bigint id PK
+        bigint profile_id FK
+        string achievment_type "PROJECTS_SPRINTER, FIRST_PROJECT, ..."
+        bigint earned_timestamp "Unit timestamp в секундах получения ачивки"
+        bool publicly_visible "Видна ли ачивка в публичном профиле"
+    }
+
+    Projects {
+        bigint id PK
+        bigint author_telegram_user_id
+        string github_repository_url
+        string programming_language "Java, Python, ..."
+        string roadmap_project "HANGMAN, SIMULATION, ..., OTHER"
+        bigint added_timestamp "Unix timestamp в секундах момента добавления проекта"
+    }
+
     Profiles ||--o{ Profiles_Details : has
+    Profiles ||--o{ Achievments : has
 
 ```
 
 Индексы:
 - Unique композитный индекс на колонки `details_name`, `detail_value` таблицы `Profiles_Details`
+- Индекс по `Projects.author_telegram_user_id` для поиска проектов по автору
+- Unique индекс на `Projects.github_repository_url` для проверки уникальности проекта
+- Unique составной индекс на колонки `profile_id`, `achievment_type` таблицы `Achievments` 
 
 ## Схема REST API
 
