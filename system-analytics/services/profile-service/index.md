@@ -82,8 +82,10 @@ erDiagram
   "github_profile_url": "https://github.com/zhukovsd",
   "telegram_url": "https://t.me/zhukovsd",
   "achievements: [
-    "type": "FIRST_PROJECT"
-    "earned_timestamp": 1766342407
+    {
+      "type": "FIRST_PROJECT",
+      "earned_timestamp": 1766342407
+    }
   ]
 }
 ```
