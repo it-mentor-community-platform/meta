@@ -131,6 +131,9 @@ erDiagram
 Payload сообщения:
 ```
 {
-  "telegram_user_id": bigint
+  "telegram_user_id": bigint,
+  "telegram_username": string, // может быть null
+  "first_name": string, // может быть null
+  "last_name": string  // может быть null
 }
 ```
