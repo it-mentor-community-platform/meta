@@ -200,7 +200,7 @@ erDiagram
 {
   "telegram_user_id": 1,
   "details": {
-    "github_profile": "https://github.com/zhukovsd",
+    "github_profile_url": "https://github.com/zhukovsd",
     "telegram_url": "https://t.me/zhukovsd"
   }
 }
@@ -223,7 +223,7 @@ erDiagram
 {
   "telegram_user_id": 1,
   "details": {
-    "github_profile": "https://github.com/zhukovsd",
+    "github_profile_url": "https://github.com/zhukovsd",
     "telegram_url": "https://t.me/zhukovsd"
   }
 }
@@ -239,14 +239,9 @@ erDiagram
 
 ### Consumer для топика `auth.user.created`
 
-Используется для иницилизации профиля пользователя в таблице `Profiles`.
+Используется для иницилизации профиля пользователя в таблице `Profiles` и заполнения начальных значений для деталей `telegram_url`, `gihub_profile_url`, `first_name`, `last_name`.
 
-Payload сообщения:
-```
-{
-  "telegram_user_id": bigint
-}
-```
+Payload сообщения - https://github.com/it-mentor-community-platform/meta/blob/main/system-analytics/services/auth-service/index.md#kafka
 
 ### Consumer для топика `projects.project.created`
 
