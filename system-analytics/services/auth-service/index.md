@@ -122,6 +122,48 @@ erDiagram
 - 400 - ошибки валидации (пример - неизвестные системе роли)
 - 500 - неизвестная ошибка
 
+### Внутренний эндпоинт для получения списка пользователей по их telegram user id
+
+`GET /api/auth/internal/users`
+
+GET параметры:
+- `telegram_user_ids` - список telegram user id пользователей через запятую
+
+```
+[
+  {
+    "telegram_user_id": 1,
+    "roles": ["ROLE_1", "ROLE_2"],
+    "telegram_username": "zhukovsd"
+  }
+]
+```
+
+Если один или несколько пользователей для переданных `telegram_user_ids` не найден, мы не включаем его в ответ.
+
+Коды ошибок:
+
+- 400 - ошибки валидации (пример - некорректно сформированный список `telegram_user_ids`)
+
+### Админский эндпоинт для управления ролями пользователей
+
+`PATCH /api/auth/admin/user?telegram_user_id=${:id}`
+
+Тело запроса (`Content-Type: application-json`)
+```
+{
+  "roles": ["ROLE_1", "ROLE_2"]
+}
+```
+
+[Бизнес-аналитика](https://github.com/it-mentor-community-platform/meta/blob/main/business-analytics/functionality/admin-functionality.md#%D1%83%D0%BF%D1%80%D0%B0%D0%B2%D0%BB%D0%B5%D0%BD%D0%B8%D0%B5-%D1%80%D0%BE%D0%BB%D1%8F%D0%BC%D0%B8) управления ролями.
+
+Коды ошибок:
+
+- 400 - ошибки валидации (примеры - невалидная роль, невалидный или отсутствующий `telegram_user_id`)
+- 403 - у юзера, делающего запрос, нет роли ADMIN; попытка добавить/убрать роль `ADMIN` у себя или другого пользователя
+- 404 - юзер не найден
+
 ## Kafka
 
 ### Producer для топика `auth.user.created`
