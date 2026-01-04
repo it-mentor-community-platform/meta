@@ -224,7 +224,8 @@ erDiagram
   "telegram_user_id": 1,
   "details": {
     "github_profile_url": "https://github.com/zhukovsd",
-    "telegram_url": "https://t.me/zhukovsd"
+    "telegram_url": "https://t.me/zhukovsd",
+    ...
   }
 }
 ```
@@ -234,6 +235,42 @@ erDiagram
 - 400 - ошибки валидации запроса (например, переданная ссылка не является ссылкой на GitHub профиль)
 - 500 - неизвестная ошибка
 - 404 - профиль не найден
+
+### Админский эндпоинт для получения списка профилей с ролями
+
+`GET /api/profile/admin/profiles`
+
+GET параметры:
+- Пагинация
+  - `page_number` - индекс страницы, начиная с `1`
+  - `page_size` - размер страницы. Положительное число
+- Фильтрация (для упрощения, фильтруем только по доступным в `details` полям)
+  - Имя GET параметра - название `details` поля профиля. Пример - `?first_name=Sergey&last_name=Zhukov` будет искать юзера по значениям first и last name  
+
+Ответ в случае успеха: `200 OK`, тело:
+
+```
+{
+  "total_item_count": 10,
+  "total_page_count": 2,
+  "page_size": 6,
+  "page_number": 1,
+  "items": [
+    {
+      "telegram_user_id": 1,
+      "details": {
+        ...
+      },
+      "roles": ["ADMIN", "STUDENT", "MENTOR"]
+    }
+  ]
+}
+```
+
+Коды ошибок:
+
+- 400 - ошибки валидации запроса (например, неправильно заданы парамеры фильтрации и пагинации)
+- 403 - у юзера нет роли `ADMIN`
 
 ## Kafka
 
