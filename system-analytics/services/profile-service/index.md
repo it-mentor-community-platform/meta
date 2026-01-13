@@ -79,8 +79,11 @@ erDiagram
 
 ```
 {
-  "github_profile_url": "https://github.com/zhukovsd",
-  "telegram_url": "https://t.me/zhukovsd",
+  "details": [
+    "github_profile_url": "https://github.com/zhukovsd",
+    "telegram_url": "https://t.me/zhukovsd",
+    "first_name": "Sergey"
+  ],
   "achievements": [
     {
       "type": "FIRST_PROJECT",
