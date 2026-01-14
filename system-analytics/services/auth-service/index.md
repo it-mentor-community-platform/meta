@@ -133,8 +133,7 @@ GET параметры:
 [
   {
     "telegram_user_id": 1,
-    "roles": ["ROLE_1", "ROLE_2"],
-    "telegram_username": "zhukovsd"
+    "roles": ["ROLE_1", "ROLE_2"]
   }
 ]
 ```
