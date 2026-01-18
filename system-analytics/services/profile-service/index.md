@@ -239,6 +239,31 @@ erDiagram
 - 500 - неизвестная ошибка
 - 404 - профиль не найден
 
+### Внутренний эндпоинт поиска профиля по ссылке на Telegram
+
+Формат ссылки, пример - https://t.me/zhukovsd.
+
+`GET /api/profile/internal/profile/by-telegram-url?url=${:url}`
+
+Ответ в случае успеха: `200 OK`, тело:
+
+```
+{
+  "telegram_user_id": 1,
+  "details": {
+    "github_profile_url": "https://github.com/zhukovsd",
+    "telegram_url": "https://t.me/zhukovsd",
+    ...
+  }
+}
+```
+
+Коды ошибок:
+
+- 400 - ошибки валидации запроса (например, переданная ссылка не является ссылкой на Telegram профиль)
+- 500 - неизвестная ошибка
+- 404 - профиль не найден
+
 ### Админский эндпоинт для получения списка профилей с ролями
 
 `GET /api/profile/admin/profiles`
