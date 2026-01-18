@@ -77,6 +77,20 @@
 - 401 - пользователь неавторизован (в запросе отсутствует заголовок `X-Telegram-User-Id`)
 - 403 - у пользователя нет роли `ADMIN`
 
+### Запуск импорта гарантированных ревью
+
+`POST /api/data-importer/start-guaranteed-reviews-import`
+
+Метод требует наличия роли `ADMIN`.
+
+Шаги описаны в [системной аналитике](https://github.com/it-mentor-community-platform/meta/blob/main/system-analytics/functionality/data-import.md#%D0%B8%D0%BF%D0%BC%D0%BF%D0%BE%D1%80%D1%82-%D0%B3%D0%B0%D1%80%D0%B0%D0%BD%D1%82%D0%B8%D1%80%D0%BE%D0%B2%D0%B0%D0%BD%D0%BD%D1%8B%D1%85-%D1%80%D0%B5%D0%B2%D1%8C%D1%8E) импорта данных.
+
+Ответ в случае успеха: `200 OK`.
+
+Коды ошибок:
+- 401 - пользователь неавторизован (в запросе отсутствует заголовок `X-Telegram-User-Id`)
+- 403 - у пользователя нет роли `ADMIN`
+
 ## Kafka
 
 ### Consumer для топика `projects.project.created`
