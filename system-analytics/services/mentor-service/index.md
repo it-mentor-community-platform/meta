@@ -18,7 +18,8 @@ erDiagram
     Mentors {
         bigint id PK
         bigint mentor_telegram_user_id
-        bool is_active "выдана ли ментору роль 'MENTOR'"
+        string telegram_url "https://t.me/zhukovsd"
+        bool is_active "Выдана ли ментору роль 'MENTOR'"
     }
 
     Guaranteed_Reviews_Prices {
