@@ -44,3 +44,11 @@
 - Обработчик `POST /api/mentor/internal/guaranteed-review` в Mentor Service:
   - Запрашиваем `GET /api/profile/internal/profile/by-telegram-url`, чтобы получить telegram user id ментора, зная его Telegram url
   - Обрабатываем переданный объект, делаем UPSERT ментора в таблице `Mentors`, UPSERT цены на ревью в таблице `Guaranteed_Reviews_Prices` 
+
+### Требования
+
+- Конкретная Google Spreadsheet таблица устанавливается через конфиг. Для удобства локальной разработки полезно создать свою копию таблицы и управлять её содержимым (прав на редактирование в основной таблицы у разработчиков нет). Ссылка на основную таблицу - [продовая таблица](https://docs.google.com/spreadsheets/d/1DkIIcE6oUtcK9jjfrOyUgatb6DIxL5GXEn3kvUp4Lms/edit?gid=0#gid=0)
+
+### Допущения
+
+- Цены на данный момент только в долларах, другие валюты не подразумеваются
