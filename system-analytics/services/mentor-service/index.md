@@ -51,7 +51,7 @@ erDiagram
 }
 ```
 
-### Внутренний эндпоинт для добавления цена на гарантированное ревью из Data Importer
+### Внутренний эндпоинт для добавления цены на гарантированное ревью из Data Importer
 
 `POST /api/mentor/internal/guaranteed-review`
 
