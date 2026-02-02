@@ -17,7 +17,7 @@
 erDiagram
     Mentors {
         bigint id PK
-        bigint mentor_telegram_user_id
+        bigint mentor_telegram_user_id UK
         string telegram_url "https://t.me/zhukovsd"
         bool is_active "Выдана ли ментору роль 'MENTOR'"
     }
@@ -34,6 +34,7 @@ erDiagram
 ```
 
 Индексы:
+- Уникальный индекс на значение `mentor_telegram_user_id` для проверки уникальности ментора
 - Уникальный композитный индекс на комбинацию значений `mentor_id`, `project_type`, `language` 
 
 ## Схема REST API
