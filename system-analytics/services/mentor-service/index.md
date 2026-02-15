@@ -10,6 +10,7 @@
 
 Входящие:
 - REST эндпоинты
+- Kafka
 
 ## Схема БД
 
@@ -74,3 +75,13 @@ erDiagram
 - 400 - ошибки валидации (невалидный тип проекта, невалидная ссылка на Telegram профиль)
 - 500 - неизвестная ошибка
 - 404 - ментор не найден в profile service по ссылке на Telegram профиль 
+
+## Kafka
+
+### Consumer для топика `auth.user.updated`
+
+Consumer group - `mentor-service-cg`.
+
+Используется для актуализации поля `is_active` в таблице `Mentors`. Если у пользователя есть роль `MENTOR`, `is_mentor` присваивается значение `true`.
+
+Payload сообщения - https://github.com/it-mentor-community-platform/meta/blob/main/system-analytics/services/auth-service/index.md#producer-%D0%B4%D0%BB%D1%8F-%D1%82%D0%BE%D0%BF%D0%B8%D0%BA%D0%B0-authuserupdated
