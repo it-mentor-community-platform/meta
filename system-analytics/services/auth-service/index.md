@@ -178,3 +178,20 @@ Payload сообщения:
   "last_name": string  // может быть null
 }
 ```
+
+### Producer для топика `auth.user.updated`
+
+Сообщение отправляется в топик при обновлении пользователя. Сценарии:
+- Пользователь авторизовался через Telegram, и его username, first_name, last_name обновились со времени последнего логина.
+- Роль существующего пользователя изменилась в результате вызова `PATCH /api/auth/admin/user?telegram_user_id=${:id}`
+
+Payload сообщения:
+```
+{
+  "telegram_user_id": bigint,
+  "telegram_username": string, // может быть null
+  "first_name": string, // может быть null
+  "last_name": string, // может быть null
+  "roles": ["ROLE_1", "ROLE_2"]
+}
+```
