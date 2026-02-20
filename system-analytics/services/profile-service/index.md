@@ -51,7 +51,7 @@ erDiagram
 ```
 
 Индексы:
-- Unique композитный индекс на колонки `profiile_id`, `details_name` таблицы `Profiles_Details`
+- Unique композитный индекс на колонки `profiile_id`, `detail_name` таблицы `Profiles_Details`
 - Индекс по `Projects.author_telegram_user_id` для поиска проектов по автору
 - Unique индекс на `Projects.github_repository_url` для проверки уникальности проекта
 - Unique составной индекс на колонки `profile_id`, `achievement_type` таблицы `Achievements` 
