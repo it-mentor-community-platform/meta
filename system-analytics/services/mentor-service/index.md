@@ -31,12 +31,51 @@ erDiagram
         int price_usd 
     }
 
+    Mentor_Descriptions {
+        bigint id PK
+        bigint mentor_user_id FK
+        string name
+        int cost "FREE, PAID, FREE_AND_PAID"
+        string description
+    }
+
+    Programming_Languages {
+        bigint id PK
+        string name UK
+    }
+
+    Mentors_Programming_Languages {
+        bigint mentor_id FK
+        bigint programming_language_id FK
+    }
+
+    Services {
+        bigint id PK
+        string name UK
+    }
+
+    Mentors_Services {
+        bigint mentor_id FK
+        bigint service_id FK
+    }
+
     Mentors ||--o{ Guaranteed_Reviews_Prices : "id = mentor_id"
+    Mentors ||--o{ Mentor_Descriptions : "id = mentor_user_id"
+
+    Mentors ||--o{ Mentors_Programming_Languages : "id = mentor_id"
+    Programming_Languages ||--o{ Mentors_Programming_Languages : "id = programming_language_id"
+
+    Mentors ||--o{ Mentors_Services : "id = mentor_id"
+    Services ||--o{ Mentors_Services : "id = service_id"
 ```
 
 Индексы:
-- Уникальный индекс на значение `mentor_telegram_user_id` для проверки уникальности ментора
-- Уникальный композитный индекс на комбинацию значений `mentor_id`, `project_type`, `language` 
+- `Mentors` - уникальный индекс на значение `mentor_telegram_user_id` для проверки уникальности ментора
+- `Mentors` - уникальный композитный индекс на комбинацию значений `mentor_id`, `project_type`, `language` 
+- `Mentors_Programming_Languages` - композитный primary key на обе колонки
+- `Mentors_Services` - композитный primary key на обе колонки
+- `Programming_Languages` - `name` уникальна и case-insensitive (пример - если есть значение "Java", то "JAVA" уже не вставить)
+- `Services` - `name` уникальна и case-insensitive
 
 ## Схема REST API
 
