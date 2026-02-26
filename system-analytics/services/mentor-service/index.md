@@ -92,6 +92,33 @@ erDiagram
 }
 ```
 
+### Внутренний эндпоинт для добавления ментора
+
+`POST /api/mentor/internal/mentor`
+
+Тело запроса (`Content-Type: application-json`):
+
+```
+{
+  "mentorTelegramUserId": 123456,
+  "telegramUrl": "https://t.me/zhukovsd",
+  "description": {
+    "name": "Sergey Zhukov",
+    "cost": "PAID",
+    "description": "Мои услуги - https://zhukovsd.it/services/"
+  },
+  "programmingLanguages": ["Java", "Python", "Kotlin"],
+  "services": ["менторство по поиску работы", "консультации"]
+}
+```
+
+Ответ в случае успеха: `201 Created` если ментор была создан, `200 OK` если обновлён.
+
+Коды ошибок:
+
+- 400 - ошибки валидации
+- 500 - неизвестная ошибка
+
 ### Внутренний эндпоинт для добавления цены на гарантированное ревью из Data Importer
 
 `POST /api/mentor/internal/guaranteed-review`
@@ -107,7 +134,7 @@ erDiagram
 }
 ```
 
-Ответ в случае успеха: `201 Created` если цена была создава, `200 OK` если обновлена.
+Ответ в случае успеха: `201 Created` если цена была создана, `200 OK` если обновлена.
 
 Коды ошибок:
 
