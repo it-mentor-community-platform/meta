@@ -9,7 +9,7 @@
 ### Шаги
 
 - Пользователь добавляет проект через форму в Mini App, указывая ссылку на GitHub репозиторий, язык, какой проекта роадмапа сдаётся, ссылку на деплой (если есть)
-- Mini App совершает POST запрос `/api/projects/project`, тело содержит введённые пользователем данные, Telegram user id можно узнать, посмотрев в subject JWT токена. Gateway направляет запрос к Project Service
+- Mini App совершает POST запрос `/api/project/project`, тело содержит введённые пользователем данные, Telegram user id можно узнать, посмотрев в subject JWT токена. Gateway направляет запрос к Project Service
 - Project Service сохраяет проект в свою SQL БД. Дата добавления проекта - текущий момент времени
 - Project Service формирует Kafka сообщение для топика `projects.project.created`. Тело содержит введённые пользователем данные, его Telegram user id, ссылки на Telegram и GitHub профили, тип источника проекта (mini app). Консьюмеры:
   - Telegram Bot формирует Telegram пост и публикует его в чат
@@ -26,7 +26,7 @@
     participant Chat as Чат
     participant DataImporter as Data Importer
 
-    MiniApp ->>+ ProjectService: POST /api/projects/project<br/>(данные проекта в теле +<br/>telegram_user_id в токене)
+    MiniApp ->>+ ProjectService: POST /api/project/project<br/>(данные проекта в теле +<br/>telegram_user_id в токене)
 
     ProjectService ->> SQLDB: Сохранение проекта в БД
     ProjectService -->>- MiniApp: 201 Created
@@ -47,7 +47,7 @@
 
 - Пользователь публикует ссылку на проект в чате сообщества, указывая ссылку на GitHub репозиторий
 - Администратор вызывает команду `/addproject ${:language} ${:project_name}` 
-- В Telegram Bot'е срабатывает handler команды `/addproject` и он вызывает эндпоинт `POST /api/projects/internal/project`, тело содержит введённые пользователем данные, его Telegram user id, и тип источника проекта (Telegram bot)
+- В Telegram Bot'е срабатывает handler команды `/addproject` и он вызывает эндпоинт `POST /api/project/internal/project`, тело содержит введённые пользователем данные, его Telegram user id, и тип источника проекта (Telegram bot)
 - Project Service сохраяет проект в свою SQL БД. Дата добавления проекта - текущий момент времени
 - Project Service формирует Kafka сообщение для топика `projects.project.created`. Тело содержит введённые пользователем данные, его Telegram user id, ссылки на Telegram и GitHub профили, тип источника проекта (Telegram bot). Консьюмеры:
   - Telegram Bot игнорирует сообщение потому что тип источник проекта - Telegram bot
@@ -69,7 +69,7 @@ sequenceDiagram
     Admin ->> Chat: Команда /addproject ${language} ${project_name}
 
     Chat ->>+ TelegramBot: Обработка команды /addproject<br/>+ извлечение данных проекта и telegram_user_id
-    TelegramBot ->>+ ProjectService: POST /api/projects/internal/project<br/>(данные проекта + telegram_user_id<br/>+ тип источника проекта)
+    TelegramBot ->>+ ProjectService: POST /api/project/internal/project<br/>(данные проекта + telegram_user_id<br/>+ тип источника проекта)
 
     ProjectService ->> SQLDB: Сохранение проекта в БД
     ProjectService -->>- TelegramBot: 201 Created
@@ -94,7 +94,7 @@ sequenceDiagram
 - Администратор запускает импорт проектов через `POST /api/data-importer/start-projects-import`
 - Data Importer читает проекты из [таблицы](https://docs.google.com/spreadsheets/d/1E66YrdvO7B_j0Ykge-JJDMtB1RfKhIzN_SsO7UPDbrU/edit?gid=0#gid=0) (лист "Projects")
 - Для каждого проекта, Data Importer делает запрос к Profile Service, чтобы найти пользователя по GitHub профилю - `GET /api/profile/internal/profile/by-github-profile-url?url=${:url}`. Из ответа извлекается Telegram user id автора и ссылка на Telegram профиль
-- Data Importer вызывает эндпоинт `POST /api/projects/internal/project`, тело содержит введённые пользователем данные и его Telegram user id и timestamp добавления проекта (извлекается из Google таблицы)
+- Data Importer вызывает эндпоинт `POST /api/project/internal/project`, тело содержит введённые пользователем данные и его Telegram user id и timestamp добавления проекта (извлекается из Google таблицы)
 - Project Service сохраяет проект в свою SQL БД. Дата добавления проекта - из запроса
 - Project Service формирует Kafka сообщение для топика `projects.project.created`. Тело содержит введённые пользователем данные, его Telegram user id, ссылки на Telegram и GitHub профили, тип источника проекта (Data Importer). Консьюмеры:
   - Telegram Bot игнорирует сообщение потому что тип источника проекта - Data Importer
@@ -120,7 +120,7 @@ sequenceDiagram
         DataImporter ->>+ ProfileService: GET /api/profile/internal/profile/by-github-profile-url<br/>?url=${url}
         ProfileService -->>- DataImporter: Профиль автора проекта
 
-        DataImporter ->>+ ProjectService: POST /api/projects/internal/project<br/>(данные проекта + telegram_user_id<br/>+ тип источника проекта)
+        DataImporter ->>+ ProjectService: POST /api/project/internal/project<br/>(данные проекта + telegram_user_id<br/>+ тип источника проекта)
 
         ProjectService ->> SQLDB: Сохранение проекта в БД
         ProjectService -->>- DataImporter: 201 Created
