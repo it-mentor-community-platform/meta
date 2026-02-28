@@ -35,7 +35,7 @@ erDiagram
         bigint id PK
         bigint mentor_user_id FK
         string name
-        int cost "FREE, PAID, FREE_AND_PAID"
+        string cost "FREE, PAID, FREE_AND_PAID"
         string description
     }
 
