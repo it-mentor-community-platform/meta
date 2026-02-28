@@ -73,7 +73,7 @@ erDiagram
 
 ### Получение публичного профиля текущего пользователя
 
-`GET /api/profile`
+`GET /api/profile/`
 
 Ответ в случае успеха: `200 OK`. Тело:
 
@@ -140,7 +140,7 @@ erDiagram
 
 Метод возвращает список всех поддерживаемых системой ачивок, с информацией о том получена ли каждая из них текущим пользователем.
 
-`GET /api/achievements`
+`GET /api/profile/achievements`
 
 Ответ в случае успеха: `200 OK`. Тело:
 
@@ -169,7 +169,7 @@ erDiagram
 
 ### Управление видимостью ачивки в публичном профиле текущего пользователя
 
-`PATCH /api/achievement/type=${:type}`
+`PATCH /api/profile/achievement/type=${:type}`
 
 Тело запроса (`Content-Type: application/json`):
 
