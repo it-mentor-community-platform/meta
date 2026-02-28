@@ -73,7 +73,7 @@ erDiagram
 
 ### Получение публичного профиля текущего пользователя
 
-`GET /api/profile/`
+`GET /api/profile/profile/`
 
 Ответ в случае успеха: `200 OK`. Тело:
 
@@ -115,7 +115,7 @@ erDiagram
 
 Метод поддерживает передачу одного или нескольких полей профиля. Ачивки управляются отдельно.
 
-`PATCH /api/profile`
+`PATCH /api/profile/profile`
 
 Тело запроса (`Content-Type: application-json`)
 ```
