@@ -33,7 +33,7 @@ erDiagram
 
     Mentor_Descriptions {
         bigint id PK
-        bigint mentor_user_id FK
+        bigint mentor_user_id UK
         string name
         string cost "FREE, PAID, FREE_AND_PAID"
         string description
@@ -71,7 +71,8 @@ erDiagram
 
 Индексы:
 - `Mentors` - уникальный индекс на значение `mentor_telegram_user_id` для проверки уникальности ментора
-- `Mentors` - уникальный композитный индекс на комбинацию значений `mentor_id`, `project_type`, `language` 
+- `Mentors` - уникальный композитный индекс на комбинацию значений `mentor_id`, `project_type`, `language`
+- `Mentor_Descriptions` - уникальный индекс на значение `mentor_user_id`
 - `Mentors_Programming_Languages` - композитный primary key на обе колонки
 - `Mentors_Services` - композитный primary key на обе колонки
 - `Programming_Languages` - `name` уникальна и case-insensitive (пример - если есть значение "Java", то "JAVA" уже не вставить)
