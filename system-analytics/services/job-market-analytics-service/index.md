@@ -46,6 +46,8 @@ erDiagram
 
 Для всех методов передаются [кастомные заголовки запроса](https://github.com/it-mentor-community-platform/meta/blob/main/system-analytics/services/gateway/index.md#%D0%BF%D1%80%D0%B0%D0%B2%D0%B8%D0%BB%D0%B0-security) с Telegram Id и ролями пользователя.
 
+Формат адресов запроса - `/api/имя сервиса/эндпоинт`.
+
 Управление поисковыми запросами доступно только пользователям с ролью `ADMIN`.
 
 ---
@@ -64,7 +66,7 @@ erDiagram
 
 ### Эндпоинт для создания поискового запроса
 
-`POST /api/search-query`
+`POST /api/job-market-analytics/search-query`
 
 Тело запроса (`Content-Type: application/json`):
 
@@ -98,7 +100,7 @@ erDiagram
 
 ### Эндпоинт для редактирования поискового запроса
 
-`PUT /api/search-query/{id}`
+`PUT /api/job-market-analytics/search-query/{id}`
 
 Тело запроса (`Content-Type: application/json`):
 
@@ -121,7 +123,7 @@ erDiagram
 
 ### Эндпоинт для получения списка поисковых запросов
 
-`GET /api/search-queries`
+`GET /api/job-market-analytics/search-queries`
 
 GET Параметры:
 
@@ -129,7 +131,7 @@ GET Параметры:
 
 Пример:
 
-`GET /api/search-query?isEnabled=true`
+`GET /api/job-market-analytics/search-query?isEnabled=true`
 
 Ответ в случае успеха: `200 OK`.
 
