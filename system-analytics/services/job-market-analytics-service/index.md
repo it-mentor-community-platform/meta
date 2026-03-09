@@ -1,5 +1,9 @@
 # Job Market Analytics Service
 
+## Контекст
+
+- [Бизнес аналитика](https://github.com/it-mentor-community-platform/meta/blob/main/business-analytics/functionality/job-market-analytics.md)
+
 ## Стек
 
 - Spring Boot 3
@@ -48,7 +52,7 @@ erDiagram
 
 Формат адресов запроса - `/api/имя сервиса/эндпоинт`.
 
-Управление поисковыми запросами доступно только пользователям с ролью `ADMIN`.
+Управление (создание, редактирование) поисковыми запросами доступно только пользователям с ролью `ADMIN`.
 
 ---
 
@@ -125,6 +129,8 @@ erDiagram
 
 `GET /api/job-market-analytics/search-queries`
 
+Доступно без авторизации.
+
 GET Параметры:
 
 - `isEnabled` — optional, фильтр по признаку активности
@@ -157,5 +163,39 @@ GET Параметры:
 Коды ошибок:
 
 - 400 - невалидное значение query param
-- 403 - недостаточно прав
 - 500 - неизвестная ошибка
+
+### Эндпоинт для получения списка датапоинтов по заданному поисковому запросу
+
+`GET /api/job-market-analytics/data-points`
+
+Полученых исторических data points для построения графиков по одному поисковому запросу за данный период.
+
+GET параметры:
+- `searchQueryId` - айди поискового запроса
+- `from` — дата YYYY-MM-DD (включительно)
+- `to` — дата YYYY-MM-DD (включительно). Если не передана — подразумевается текущая дата
+
+Примеры:
+
+- `/api/job-market-analytics/data-points?searchQueryId=1&from=2026-01-01&to=2026-03-01`
+- `/api/job-market-analytics/data-points?searchQueryId=1&from=2026-01-01`
+
+Ответ в случае успеха: `200 OK`.
+
+Тело ответа:
+
+```
+[
+  {
+    "date": "01.01.2023",
+    "vacancyCount": 123,
+    "averageSalary": 12.34
+  },
+  {
+    "date": "02.01.2023",
+    "vacancyCount": 124,
+    "averageSalary": 12.35
+  }
+]
+```
