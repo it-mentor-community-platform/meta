@@ -25,6 +25,8 @@
 - `/api/auth/**` - запросы передаются в Auth Service
 - `/api/profile/**` запросы передаются в Profile Service
 - `/api/project/**` запросы передаются в Project Service
+- `/api/project/**` запросы передаются в Mentor Service
+- `/api/job-market-analytics/**` запросы передаются в Job Market Analytics Service
 - Если маршрут не найден, отвечаем 404
 
 ## Правила Security
