@@ -8,6 +8,7 @@
 
 - Spring Boot 3
 - Spring Data JDBC
+- Spring Kafka
 - Liquibase
 
 ## Взаимодействия
