@@ -22,7 +22,7 @@
 
 ## Схема БД
 
-```
+```mermaid
 erDiagram
     search_queries {
         bigint id PK
