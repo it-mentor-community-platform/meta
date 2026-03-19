@@ -26,7 +26,7 @@
 erDiagram
     search_queries {
         bigint id PK
-        varchar title
+        varchar title UK
         text query
         boolean is_enabled
     }
@@ -46,6 +46,7 @@ erDiagram
 
 Индексы:
 - `market_data_points` - композитный `UNIQUE` на пару значений `search_query_id`, `snapshot_date`
+- `search_queries` -   уникальный индекс на значение `title`
 
 ## Схема REST API
 
