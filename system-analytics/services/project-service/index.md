@@ -123,7 +123,7 @@ Payload сообщения:
 ```
 {
   "author_telegram_user_id": 123,
-  "author_telegram_profile_url": "https://t.me/zhukovsd"
+  "author_telegram_profile_url": "https://t.me/zhukovsd" // может быть null
   "github_repository_url": "https://github.com/zhukovsd/simulation",
   "programming_language": "Java",
   "roadmap_project": "SIMULATION",
