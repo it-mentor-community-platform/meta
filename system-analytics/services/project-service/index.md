@@ -95,12 +95,11 @@ Telegram id автора знаем из заголовка.
 Тело запроса:
 ```
 {
-  "author_telegram_user_id": 123,
   "github_repository_url": "https://github.com/zhukovsd/simulation",
   "programming_language": "Java",
   "roadmap_project": "SIMULATION",
-  "telegram_user_id": 123,
-  "telegram_username": "zhukovsd",
+  "author_telegram_user_id": 123,
+  "author_telegram_username": "zhukovsd",
   "added_timestamp:" 123, // опциональный параметр
   "projeсt_source_type": "FRONTEND" // FRONTEND, TELEGRAM_BOT, DATA_IMPORTER
 }
