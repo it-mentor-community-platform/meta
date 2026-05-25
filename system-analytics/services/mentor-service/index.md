@@ -152,3 +152,41 @@ Consumer group - `mentor-service-cg`.
 Используется для актуализации поля `is_active` в таблице `Mentors`. Если у пользователя есть роль `MENTOR`, `is_mentor` присваивается значение `true`.
 
 Payload сообщения - https://github.com/it-mentor-community-platform/meta/blob/main/system-analytics/services/auth-service/index.md#producer-%D0%B4%D0%BB%D1%8F-%D1%82%D0%BE%D0%BF%D0%B8%D0%BA%D0%B0-authuserauthenticated.
+
+### Consumer для топика `projects.project.created`
+
+Consumer group - `mentor-service-cg`.
+
+Используется для уведомления менторов, делающих ревью на сданный студентом проект.
+
+Payload сообщения - https://github.com/it-mentor-community-platform/meta/blob/main/system-analytics/services/project-service/index.md#producer-%D0%B4%D0%BB%D1%8F-%D1%82%D0%BE%D0%BF%D0%B8%D0%BA%D0%B0-projectsprojectcreated.
+
+Пример:
+- В системе есть 3 ментора:
+  - Иван ревьюит все проекты на Java
+  - Пётр ревьюит только виселицу и симуляцию на Java, Kotlin
+  - Саша ревьюит все проекты на Python
+- Студент сдаёт симуляцию на Java
+- Нам необходимо уведомить Ивана и Петра
+
+Результат работы консьюмера - новое сообщение в топик `notifications.mentors.project.submitted`
+
+### Producer для топика `notifications.mentors.project.submitted`
+
+Используется для уведомления менторов о сдаче студентом проекта.
+
+Payload сообщения:
+
+```
+{
+  "project": {
+    // все поля из payload сообщения `projects.project.created`
+  },
+  "mentors": [
+    {
+      "mentor_telegram_user_id": 1,
+      "mentor_telegram_profile_url": "https://t.me/zhukovsd" // может быть null
+    }
+  ]
+}
+```
