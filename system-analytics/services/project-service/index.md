@@ -28,11 +28,23 @@ erDiagram
         string roadmap_project "HANGMAN, SIMULATION, ..., OTHER"
         bigint added_timestamp "Unix timestamp момента добавления проекта"
     }
+
+    Reviews {
+        bigint id PK
+        bigint project_id FK
+        bigint reviewer_telegram_user_id
+        string url
+        bigint added_timestamp "Unix timestamp момента добавления отзыва"
+    }
+
+    Projects ||--o{ Reviews : has
 ```
 
 Индексы:
-- Индекс по `author_telegram_user_id` для поиска проектов по автору
-- Unique индекс на `github_repository_url` для проверки уникальности проекта
+- Индекс по `Projects.author_telegram_user_id` для поиска проектов по автору
+- Unique индекс на `Projects.github_repository_url` для проверки уникальности проекта
+- Индекс по `Reviews.project_id` для поиска ревью по проекту
+- Индекс по `Reviews.reviewer_telegram_user_id` для поиска ревью по ментору
 
 ## Схема REST API
 
