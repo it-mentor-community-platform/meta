@@ -98,6 +98,43 @@ Telegram id автора знаем из заголовка.
 - 400 - невалидное тело запроса (включая неизвестный тип проекта роадмапа)
 - 409 - проект по данной ссылке на репозиторий уже существует
 
+### Добавление ревью пользователем с фронтенда
+
+`POST /api/project/review`
+
+Добавление ревью ментором.
+
+Тело запроса:
+
+```
+{
+  "project_github_repository_url": "https://github.com/zhukovsd/simulation",
+  "review_url": "https://gist.github.com/zhukovsd/123456"
+}
+```
+
+Telegram id автора ревью знаем из заголовка.
+
+Ответ в случае успеха: `201 Created`. Тело:
+
+```
+{
+  "id": 0,
+  "reviewer_telegram_user_id": 123,
+  "url": "https://github.com/zhukovsd/simulation/pull/1",
+  "added_timestamp": 123,
+  "project": {
+    // поля респонса на `POST /api/project/project`
+  }
+}
+```
+
+Коды ошибок:
+
+- 500 - неизвестная ошибка
+- 400 - невалидное тело запроса
+- 404 - проект с указанным `project_github_repository_url` не найден
+
 ### Внутренний эндпоинт для добавления проекта из Telegram бота или Data Importer
 
 `POST /api/project/internal/project`
