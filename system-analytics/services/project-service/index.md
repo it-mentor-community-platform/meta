@@ -162,6 +162,43 @@ Telegram id автора ревью знаем из заголовка.
 - 400 - невалидное тело запроса (включая неизвестный тип проекта роадмапа)
 - 409 - проект по данной ссылке на репозиторий уже существует
 
+### Внутренний эндпоинт для добавления ревью из Data Importer
+
+`POST /api/project/internal/review`
+
+Используется для добавления ревью через Data Importer.
+
+Тело запроса:
+
+```
+{
+  "project_github_repository_url": "https://github.com/zhukovsd/simulation",
+  "review_url": "https://gist.github.com/zhukovsd/123456",
+  "reviewer_telegram_user_id": 123,
+  "added_timestamp": 123 // опциональный параметр
+}
+```
+
+Ответ в случае успеха: `201 Created`. Тело:
+
+```
+{
+  "id": 0,
+  "reviewer_telegram_user_id": 123,
+  "url": "https://github.com/zhukovsd/simulation/pull/1",
+  "added_timestamp": 123,
+  "project": {
+    // поля респонса на `POST /api/project/project`
+  }
+}
+```
+
+Коды ошибок:
+
+- 500 - неизвестная ошибка
+- 400 - невалидное тело запроса
+- 404 - проект с указанным `project_github_repository_url` не найден
+
 ## Kafka
 
 ### Producer для топика `projects.project.created`
