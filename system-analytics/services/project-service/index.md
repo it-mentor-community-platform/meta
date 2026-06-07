@@ -180,3 +180,21 @@ Payload сообщения:
   "projeсt_source_type": "FRONTEND" // FRONTEND, TELEGRAM_BOT, DATA_IMPORTER
 }
 ```
+
+### Producer для топика `notifications.students.review.submitted`
+
+Используется для уведомления студента о том, что ментор добавил ревью на его проект.
+
+Payload сообщения:
+
+```
+{
+  "id": 0,
+  "reviewer_telegram_user_id": 123,
+  "url": "https://github.com/zhukovsd/simulation/pull/1",
+  "added_timestamp": 123,
+  "project": {
+    // поля респонса на `POST /api/project/project`
+  }
+}
+```
