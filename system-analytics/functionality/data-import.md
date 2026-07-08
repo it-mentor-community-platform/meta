@@ -43,7 +43,8 @@
     - Для каждого языка делаем запрос `POST /api/mentor/internal/guaranteed-review`
 - Обработчик `POST /api/mentor/internal/guaranteed-review` в Mentor Service:
   - Запрашиваем `GET /api/profile/internal/profile/by-telegram-url`, чтобы получить telegram user id ментора, зная его Telegram url
-  - Обрабатываем переданный объект, делаем UPSERT ментора в таблице `Mentors`, UPSERT цены на ревью в таблице `Guaranteed_Reviews_Prices` 
+  - В случае выполнения предыдущего шага получаем ошибку 404, делаем запрос к `POST /api/profile/internal/profile` для сохранения профиля ментора (например если сам ментор не сдавал проекты ранее)
+  - Обрабатываем полученый одним из запросов объект, делаем UPSERT ментора в таблице `Mentors`, UPSERT цены на ревью в таблице `Guaranteed_Reviews_Prices` 
 
 ### Требования
 
