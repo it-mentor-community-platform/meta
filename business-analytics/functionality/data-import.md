@@ -72,6 +72,18 @@ Imp-->>Dev: Отчёт об импорте (успех/ошибки)
 - Telegram username.
 - GitHub account url.
 
+## Импорт менторов
+
+[Таблица](https://docs.google.com/spreadsheets/d/1_EaS3CRoBeo-PG04O2YGOYSk3afdGxgeqd3x0WRLe68/edit?gid=0#gid=0) "IT Ментор | Сергей Жуков | Таблица менторов"
+
+Импортируемые значения:
+- Telegram user id ментора (колонка L)
+- Telegram username ментора
+- Описание (description, колонка H)
+- Языки программирования
+- Услуги
+- Имя
+
 ## Импорт гарантированных ревью
 
 [Таблица](https://docs.google.com/spreadsheets/d/1DkIIcE6oUtcK9jjfrOyUgatb6DIxL5GXEn3kvUp4Lms/edit?gid=0#gid=0) "IT Ментор | Гарантированные ревью".
