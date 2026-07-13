@@ -91,6 +91,20 @@
 - 401 - пользователь неавторизован (в запросе отсутствует заголовок `X-Telegram-User-Id`)
 - 403 - у пользователя нет роли `ADMIN`
 
+### Запуск импорта менторов
+
+`POST /api/data-importer/start-mentors-import`
+
+Метод требует наличия роли `ADMIN`.
+
+Для импорта используется [эндпоинт](https://github.com/it-mentor-community-platform/meta/blob/main/system-analytics/services/mentor-service/index.md#%D0%B2%D0%BD%D1%83%D1%82%D1%80%D0%B5%D0%BD%D0%BD%D0%B8%D0%B9-%D1%8D%D0%BD%D0%B4%D0%BF%D0%BE%D0%B8%D0%BD%D1%82-%D0%B4%D0%BB%D1%8F-%D0%B4%D0%BE%D0%B1%D0%B0%D0%B2%D0%BB%D0%B5%D0%BD%D0%B8%D1%8F-%D0%BC%D0%B5%D0%BD%D1%82%D0%BE%D1%80%D0%B0) `POST /api/mentor/internal/mentor`.
+
+Ответ в случае успеха: `200 OK`.
+
+Коды ошибок:
+- 401 - пользователь неавторизован (в запросе отсутствует заголовок `X-Telegram-User-Id`)
+- 403 - у пользователя нет роли `ADMIN`
+
 ### Запуск импорта гарантированных ревью
 
 `POST /api/data-importer/start-guaranteed-reviews-import`
