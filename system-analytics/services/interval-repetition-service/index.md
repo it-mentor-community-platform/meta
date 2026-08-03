@@ -71,4 +71,26 @@ erDiagram
 
 ## Схема REST API
 
-TODO
+### Внутренний эндпоинт для импорта вопроса
+
+Используется для загрузки вопросов из Google Spreadsheet. Поддерживает создание нового вопроса или обновление существующего.
+
+`POST /api/interval-repetition/internal/question`
+
+Тело запроса (`Content-Type: application-json`)
+```
+{
+  "specialization": "Java",
+  "category": "Java Core",
+  "title": "Какие типы ссылок существуют в Java?",
+  "answer": "Сильная ссылка...",
+  "enabled": true
+}
+```
+
+Ответ в случае успеха: `200 OK` при успешной обработке вопроса.
+
+Коды ошибок:
+
+- 400 Bad Request — ошибки валидации.
+- 500 Internal Server Error — неизвестная ошибка.
