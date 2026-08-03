@@ -16,49 +16,52 @@
 ```mermaid
 erDiagram
 
-    SPECIALIZATION {
-        bigint id
+    Specializations {
+        bigint id PK
+        string name UK
+    }
+
+    Categories {
+        bigint id PK
+        bigint specialization_id FK
         string name
     }
 
-    CATEGORY {
-        bigint id
-        bigint specialization_id
-        string name
-    }
-
-    QUESTION {
-        bigint id
-        bigint category_id
+    Questions {
+        bigint id PK
+        bigint category_id FK
         string title
-        string expected_answer
-        boolean enabled
+        string answer
+        bool enabled
     }
 
-    USER_QUESTION_SCHEDULE {
-        bigint id
+    User_Question_Schedules {
+        bigint id PK
         bigint user_id
-        bigint question_id
+        bigint question_id FK
         int successful_repetitions
         double ease_factor
         int interval
-        datetime next_review
-        datetime last_review
+        bigint next_review_at "Unix Epoch Timestamp"
+        bigint last_review_at "Unix Epoch Timestamp"
     }
 
-    REVIEW_ATTEMPT {
-        bigint id
-        bigint user_question_schedule_id
-        int quality
+    Review_Attempts {
+        bigint id PK
+        bigint user_question_schedule_id FK
+        int quality "0..5"
         double ease_factor
         double new_ease_factor
-        datetime answered_at
+        bigint answered_at "Unix Epoch Timestamp"
     }
 
-    SPECIALIZATION ||--o{ CATEGORY : contains
-    CATEGORY ||--o{ QUESTION : contains
-    QUESTION ||--o{ USER_QUESTION_SCHEDULE : scheduled
-    USER_QUESTION_SCHEDULE ||--o{ REVIEW_ATTEMPT : attempts
+    Specializations ||--o{ Categories : "id = specialization_id"
+
+    Categories ||--o{ Questions : "id = category_id"
+
+    Questions ||--o{ User_Question_Schedules : "id = question_id"
+
+    User_Question_Schedules ||--o{ Review_Attempts : "id = user_question_schedule_id"
 ```
 Индексы:
 - Составной индекс на колонки user_id, next_review_at таблицы user_question_schedule для быстрого поиска вопросов пользователя, доступных для повторения, с сортировкой по ближайшей дате следующего показа
