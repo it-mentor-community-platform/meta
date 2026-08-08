@@ -89,9 +89,40 @@ erDiagram
 }
 ```
 
-Ответ в случае успеха: `200 OK` при успешной обработке вопроса.
+Ответ в случае успеха: `200 OK` 
 
-Коды ошибок:
+Тело ответа (`Content-Type: application-json`)
+```
+{
+  "question": {
+    "id": 1,
+    "categoryId": 1,
+    "title": "Какие типы ссылок существуют в Java?",
+    "answer": "Сильная ссылка...",
+    "enabled": true
+  },
+  "category": {
+    "id": 1,
+    "specializationId": 1,
+    "name": "Java Core"
+  },
+  "specialization": {
+    "id": 1,
+    "name": "Java"
+  }
+}
+```
+
+
+В случае ошибок:
 
 - 400 Bad Request — ошибки валидации.
 - 500 Internal Server Error — неизвестная ошибка.
+
+Тело ответа при ошибке (`Content-Type: application-json`)
+
+```
+{
+  "message": "Validation failed..."
+}
+```
