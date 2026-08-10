@@ -235,3 +235,22 @@ Payload сообщения:
   }
 }
 ```
+
+### Producer для топика `reviews.review.created`
+
+Используется для уведомления других сервисов о создании нового проекта.
+
+Payload сообщения:
+```
+{
+  "id": 0,
+  "reviewer_telegram_user_id": 123,
+  "reviewer_telegram_profile_url": "https://t.me/zhukovsd" // может быть null  
+  "url": "https://github.com/zhukovsd/simulation/pull/1",
+  "added_timestamp": 123,
+  
+  "project": {
+    // поля респонса на `POST /api/project/project`
+  }
+}
+```
