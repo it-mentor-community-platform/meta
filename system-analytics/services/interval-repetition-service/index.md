@@ -55,6 +55,12 @@ erDiagram
         bigint answered_at "Unix Epoch Timestamp"
     }
 
+    User_Category_Selections {
+        bigint id PK
+        bigint user_id
+        bigint category_id FK
+    }
+
     Specializations ||--o{ Categories : "id = specialization_id"
 
     Categories ||--o{ Questions : "id = category_id"
@@ -62,13 +68,16 @@ erDiagram
     Questions ||--o{ User_Question_Schedules : "id = question_id"
 
     User_Question_Schedules ||--o{ Review_Attempts : "id = user_question_schedule_id"
+
+    Categories ||--o{ User_Category_Selections : "id = category_id"
 ```
 Индексы:
 - Составной индекс на колонки user_id, next_review_at таблицы user_question_schedule для быстрого поиска вопросов пользователя, доступных для повторения, с сортировкой по ближайшей дате следующего показа
 - Индекс на колонку category_id таблицы question для быстрого получения вопросов определенной категории
 - Индекс на колонку user_question_schedule_id таблицы review_attempt для получения истории попыток повторения конкретного состояния вопроса пользователя
 - Unique составной индекс на колонки user_id, question_id таблицы user_question_schedule для гарантии уникальности состояния повторения вопроса для пользователя 
-
+- Unique составной индекс на колонки user_id, category_id таблицы user_category_selections для гарантии уникальности выбранной пользователем категории
+  
 ## Схема REST API
 
 ### Внутренний эндпоинт для импорта вопроса
