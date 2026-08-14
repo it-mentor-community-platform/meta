@@ -90,7 +90,7 @@
 
 ### Шаги
 
-- Запрос к `POST /api/data-importer/start-question-import` с ролью `ADMIN`
+- Запрос к `POST /api/data-importer/start-questions-import` с ролью `ADMIN`
 - Data Importer валидирует роль пользователя в заголовке `X-User-Roles`
 - Из конфигурации формируется список импортируемых таблиц
 - В случае наличия нужной роли и доступа к Google Spreadsheet таблицам Data Importer отвечает 200 на исходный запрос и запускает асинхронный процесс импорта данных:
