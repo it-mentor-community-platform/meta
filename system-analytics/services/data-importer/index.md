@@ -121,7 +121,7 @@
 
 ### Запуск импорта вопросов
 
-`/api/data-importer/start-question-import`
+`/api/data-importer/start-questions-import`
 
 Метод требует наличия роли `ADMIN`.
 
