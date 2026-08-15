@@ -55,6 +55,8 @@
 
 Метод требует наличия роли `ADMIN`.
 
+Для импорта используется [эндпоинт](https://github.com/it-mentor-community-platform/meta/blob/main/system-analytics/services/profile-service/index.md#внутренний-эндпоинт-для-импорта-профиля) `PUT /api/profile/internal/profile`.
+
 Ответ в случае успеха: `200 OK`.
 
 Коды ошибок:
