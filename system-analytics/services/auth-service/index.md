@@ -26,25 +26,28 @@
 ```mermaid
 erDiagram
     Users {
-        int id "Автоинкремент, primary key"
-        bigint telegram_user_id "64-bit signed, unique index"
+        bigint id PK
+        bigint telegram_user_id UK
     }
 
     Roles {
-        int id "Автоинкремент, primary key"
-        string name "Unique index"
+        bigint id PK
+        string name UK
     }
 
     Users_Roles {
-        int user_id "Внешний ключ на Users.id"
-        int role_id "Внешний ключ на Roles.id"
+        bigint user_id FK
+        bigint role_id FK
     }
 
-    Users ||--o{ Users_Roles : has
-    Roles ||--o{ Users_Roles : has
+    Users ||--o{ Users_Roles : "id = user_id"
+    Roles ||--o{ Users_Roles : "id = role_id"
 ```
 
-Дополнение к схеме - необходим unique композитный индекс на колонки `user_id` и `role_id` таблицы `User_Roles`.
+Индексы:
+- `Users` - уникальный индекс на значение `telegram_user_id` для проверки уникальности пользователя
+- `Roles` - уникальный индекс на значение `name`
+- `User_Roles` - уникальный композитный индекс на комбинацию значений `user_id` и `role_id`
 
 Список ролей перечислен в [бизнес аналитике](../../../business-analytics/functionality/authentication-and-authorization.md) аутентификации и авторизации.
 
