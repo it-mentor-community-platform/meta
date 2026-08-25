@@ -1,7 +1,8 @@
 # Системная аналитика - интервальное повторение вопросов для собеседований
 ## Необходимый контекст
 
-- [Бизнес аналитика - интервальное повторение][(https://github.com/it-mentor-community-platform/meta/blob/main/business-analytics/functionality/data-import.md](https://github.com/it-mentor-community-platform/meta/blob/main/business-analytics/functionality/interview-questions-interval-repetition.md))
+- [Бизнес аналитика - интервальное повторение](https://github.com/it-mentor-community-platform/meta/blob/main/business-analytics/functionality/interview-questions-interval-repetition.md)
+- [Алгоритм SM-2](https://super-memory.com/english/ol/sm2.htm)
 
 ## Инициализация
 
@@ -9,8 +10,9 @@
 
 - Пользователь заходит в раздел «Интервальное повторение»
 - Пользователю отображается список всех специализаций и категорий
-- Пользователь нажимает «Добавить на повторение»
-- Категория добавляется в список категорий пользователя, выбранных для повторения
+- Пользователь нажимает «Добавить на повторение», чтобы выбрать категорию
+- Пользователь нажимает «Продолжить», чтобы подтвердить выбор категорий
+- Категории добавляются в список категорий пользователя, выбранных для повторения
 
 
 ```mermaid
@@ -48,7 +50,7 @@ sequenceDiagram
 
 - Пользователь заходит в раздел «Вопросы на повторение»
 - Отображается список категорий, ранее добавленных пользователем на повторение
-- Для каждой категории отображается информация о вопросах, доступных для повторения
+- Для каждой категории отображается информация о вопросах(Кол-во новых вопросов, кол-во вопросов готовых к повторению, общее кол-во вопросов)
 - Пользователь может:
   - нажать «Повторить всё» и перейти к повторению вопросов из всех добавленных категорий
   - выбрать конкретную категорию и перейти к повторению вопросов только из неё
@@ -65,7 +67,7 @@ sequenceDiagram
     Frontend->>IntervalRepetitionService: GET /api/interval-repetition/selected-categories
     IntervalRepetitionService->>Database: Получить выбранные категории и метрики
     Database-->>IntervalRepetitionService: Категории и метрики
-    IntervalRepetitionService-->>Frontend: 200 OK
+    IntervalRepetitionService-->>Frontend: 200 OK + категории
     Frontend-->>User: Отображает категории
 
     User->>Frontend: Выбирает категорию
@@ -85,7 +87,7 @@ sequenceDiagram
 - Для повторения выбирается вопрос:
   - который ещё не имеет состояния у пользователя
   - или состояние которого доступно для повторения (`next_review_at <= текущего времени`)
-- Новый вопрос имеет приоритет перед вопросами, которые уже имеют состояние
+- Новый вопрос имеет приоритет перед теми, которые уже имеют состояние
 - Выбранный вопрос отображается пользователю
 
 ```mermaid
@@ -94,15 +96,6 @@ sequenceDiagram
     participant Frontend
     participant IntervalRepetitionService
     participant Database
-
-    User->>Frontend: Открывает Dashboard
-
-    Frontend->>IntervalRepetitionService: GET /api/interval-repetition/selected-categories
-    IntervalRepetitionService->>Database: Получить выбранные категории пользователя
-    Database-->>IntervalRepetitionService: Категории и метрики вопросов
-    IntervalRepetitionService-->>Frontend: 200 OK + список выбранных категорий
-    Frontend-->>User: Отображает выбранные категории и метрики
-
     User->>Frontend: Выбирает категорию
 
     Frontend->>IntervalRepetitionService: GET /api/interval-repetition/selected-categories{categoryId}/next-question
@@ -135,11 +128,11 @@ LIMIT 1;
 
 - Пользователь нажимает «Повторить всё»
 - Запускается флоу повторения вопросов из всех категорий, добавленных пользователем на повторение
-- Для повторения выбираются вопросы:
-  - которые ещё не имеют состояния у пользователя
-  - или состояние которых доступно для повторения (`next_review_at <= текущего времени`)
-- Новый вопрос имеет приоритет перед вопросами, которые уже имеют состояние
-- Из доступных вопросов выбирается один вопрос и отображается пользователю
+- Для повторения выбираются вопрос:
+  - который ещё не имеет состояния у пользователя
+  - или состояние которого доступно для повторения (`next_review_at <= текущего времени`)
+- Новый вопрос имеет приоритет перед теми, которые уже имеют состояние
+- Выбранный вопрос отображается пользователю
 
 ```mermaid
 sequenceDiagram
@@ -270,9 +263,6 @@ sequenceDiagram
     Frontend->>IntervalRepetitionService: POST /api/interval-repetition/selected-categories/{categoryId}
     IntervalRepetitionService->>Database: Добавить категорию в выбранные
     Database-->>IntervalRepetitionService: Категория добавлена
-
-    IntervalRepetitionService->>Database: Создать UserQuestionSchedule для вопросов категории
-    Database-->>IntervalRepetitionService: Состояния вопросов созданы
 
     IntervalRepetitionService-->>Frontend: 201 Created
     Frontend-->>User: Помечает категорию как выбранную
