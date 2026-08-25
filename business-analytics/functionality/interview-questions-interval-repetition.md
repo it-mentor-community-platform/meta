@@ -7,7 +7,7 @@
 - Существуют алгоритмы и формулы для расчёта интервалов при интервальном повторении, например [SM2](https://super-memory.com/english/ol/sm2.htm)
 
 ## Макет UI
-<img width="1320" height="1431" alt="636904112-138a4258-dc3a-4340-9ba2-baeca914c335" src="https://github.com/user-attachments/assets/88b62bc5-3d33-4340-bccb-5ec74c9fa466" />
+![Interval Repetition Service UI](../../images/interval-repetition-ui.jpg)
 
 
 ## Флоу работы с темами вопросов на интервальное повторение
