@@ -71,7 +71,7 @@ erDiagram
 
 Индексы:
 - `Mentors` - уникальный индекс на значение `mentor_telegram_user_id` для проверки уникальности ментора
-- `Mentors` - уникальный композитный индекс на комбинацию значений `mentor_id`, `project_type`, `language`
+- `Guaranteed_Reviews_Prices` - уникальный композитный индекс на комбинацию значений `mentor_id`, `project_type`, `language`
 - `Mentor_Descriptions` - уникальный индекс на значение `mentor_user_id`
 - `Mentors_Programming_Languages` - композитный primary key на обе колонки
 - `Mentors_Services` - композитный primary key на обе колонки
