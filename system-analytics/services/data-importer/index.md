@@ -144,4 +144,14 @@ Consumer group - `data-importer-cg`.
 
 [Описание формата](https://github.com/it-mentor-community-platform/meta/blob/main/system-analytics/services/project-service/index.md#producer-%D0%B4%D0%BB%D1%8F-%D1%82%D0%BE%D0%BF%D0%B8%D0%BA%D0%B0-projectsprojectcreated) сообщения.
 
+Используется для добавления записи о проекте в Google Spreadsheet таблицу. 
+
 [Системная аналитика](https://github.com/it-mentor-community-platform/meta/blob/main/system-analytics/functionality/projects-bookkeeping.md) процесса.
+
+### Consumer для топика `reviews.review.created`
+
+Consumer group - `data-importer-cg`.
+
+Используется для добавления записи о ревью в Google Spreadsheet таблицу. 
+
+Payload сообщения - https://github.com/it-mentor-community-platform/meta/blob/main/system-analytics/services/project-service/index.md#producer-%D0%B4%D0%BB%D1%8F-%D1%82%D0%BE%D0%BF%D0%B8%D0%BA%D0%B0-reviewsreviewcreated.
