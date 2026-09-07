@@ -45,16 +45,25 @@ erDiagram
         bigint added_timestamp "Unix timestamp в секундах момента добавления проекта"
     }
 
+    Reviews {
+        bigint id PK
+        bigint project_id FK
+        bigint reviewer_telegram_user_id
+        string url
+        bigint added_timestamp "Unix timestamp момента добавления отзыва"
+    }
+
     Profiles ||--o{ Profiles_Details : has
     Profiles ||--o{ Achievements : has
-
+    Projects ||--o{ Reviews : has
 ```
 
 Индексы:
 - Unique композитный индекс на колонки `profile_id`, `detail_name` таблицы `Profiles_Details`
 - Индекс по `Projects.author_telegram_user_id` для поиска проектов по автору
 - Unique индекс на `Projects.github_repository_url` для проверки уникальности проекта
-- Unique составной индекс на колонки `profile_id`, `achievement_type` таблицы `Achievements` 
+- Unique составной индекс на колонки `profile_id`, `achievement_type` таблицы `Achievements`
+- Индекс по `Reviews.reviewer_telegram_user_id` для поиска ревью по ментору
 
 ## Схема REST API
 
