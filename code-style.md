@@ -3,7 +3,7 @@
 ## Примечание
 Тут описанные лишь основные особенности для Java кода (для репозиториев на других языках эти правила действуют лишь 
 частично в общих для них моментов), которые стоит поддерживать в коде этого проекта, в остальном стоит ориентироваться 
-на [конвенции Java]([https://www.oracle.com/java/technologies/javase/codeconventions-introduction.html](https://www.oracle.com/java/technologies/javase/codeconventions-introduction.html)), и уже реализованные в конкретном репозитории практики.
+на [конвенции Java](https://www.oracle.com/java/technologies/javase/codeconventions-introduction.html), и уже реализованные в конкретном репозитории практики.
 
 ## Разделение классов
 
