@@ -144,6 +144,8 @@ erDiagram
 
 ### Получение всех специализаций и категорий
 
+Обязательный header - `X-Telegram-User-Id`
+
 `GET /api/interval-repetition/specializations`
 
 Возвращает список всех специализаций с вложенными категориями.
@@ -197,9 +199,14 @@ erDiagram
 
 Коды ошибок:
 
+- `400` - ошибки валидации(header).
 - `500` - неизвестная ошибка
 
 ### Сохранение выбранных категорий
+
+
+Обязательный header - `X-Telegram-User-Id`
+
 `POST /api/interval-repetition/selected-categories`
 
 Пользователь может сформировать набор категорий, которые он планирует повторять.
@@ -249,6 +256,9 @@ erDiagram
 
 ### Получение выбранных категорий
 
+
+Обязательный header - `X-Telegram-User-Id`
+
 `GET /api/interval-repetition/selected-categories`
 
 Возвращает список категорий, выбранных пользователем для повторения.
@@ -292,9 +302,13 @@ erDiagram
 
 Коды ошибок:
 
+- `400` - ошибки валидации(header).
 - `500` - неизвестная ошибка
 
 ### Удаление выбранной категории
+
+
+Обязательный header - `X-Telegram-User-Id`
 
 `DELETE /api/interval-repetition/selected-categories/{categoryId}`
 
@@ -309,6 +323,9 @@ erDiagram
 - `500` - неизвестная ошибка
 
 ### Получение следующего вопроса из всех выбранных категорий
+
+
+Обязательный header - `X-Telegram-User-Id`
 
 `GET /api/interval-repetition/selected-categories/next-question`
 
@@ -332,9 +349,13 @@ erDiagram
 
 Коды ошибок:
 
+- `400` - ошибки валидации(header).
 - `500` - неизвестная ошибка
 
 ### Получение следующего вопроса из конкретной категории
+
+
+Обязательный header - `X-Telegram-User-Id`
 
 `GET /api/interval-repetition/categories/{categoryId}/next-question`
 
@@ -366,6 +387,9 @@ erDiagram
 
 Пользователь самостоятельно оценивает свой ответ после просмотра вопроса.
 
+
+Обязательный header - `X-Telegram-User-Id`
+
 `POST /api/interval-repetition/review-attempt`
 
 Тело запроса (`Content-Type: application/json`):
@@ -386,6 +410,9 @@ erDiagram
 - `500` - неизвестная ошибка
 
 ### Получение категории и её вопросов
+
+
+Обязательный header - `X-Telegram-User-Id`
 
 `GET /api/interval-repetition/categories/{categoryId}`
 
