@@ -251,6 +251,7 @@ Payload сообщения:
   
   "project": {
     // поля респонса на `POST /api/project/project`
-  }
+  },
+  "review_source_type": "FRONTEND" // FRONTEND, DATA_IMPORTER  
 }
 ```
