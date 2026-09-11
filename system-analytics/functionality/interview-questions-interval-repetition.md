@@ -76,6 +76,31 @@ sequenceDiagram
     User->>Frontend: Нажимает «Повторить всё»
     Frontend->>Frontend: Переход к повторению всех категорий
 ```
+Запрос к бд на получение добавленных категорий:
+```sql
+SELECT
+        c.id AS id,
+        c.name AS name,
+        s.name AS specialization_name,
+        ucs.category_id IS NOT NULL AS selected,
+        count(q.id) AS all_questions,
+        count(q.id) AS new_questions,
+        count(q.id) FILTER (WHERE uqs.next_review_at <= EXTRACT(EPOCH FROM now())) AS questions_ready_to_repeat
+FROM categories c
+LEFT JOIN interval_repetition_service.user_category_selections ucs
+    ON c.id = ucs.category_id
+        AND ucs.user_id = :userId
+JOIN interval_repetition_service.questions q
+    ON c.id = q.category_id
+        AND q.enabled = true
+LEFT JOIN interval_repetition_service.user_question_schedules uqs
+    ON q.id = uqs.question_id
+        AND uqs.user_id = :userId
+JOIN specializations s ON c.specialization_id = s.id
+WHERE ucs.category_id IS NOT NULL
+GROUP BY c.id, ucs.category_id, s.name
+ORDER BY c.id;
+```
 
 
 ## Получить вопрос из конкретной категории
@@ -107,7 +132,11 @@ sequenceDiagram
 ```
 Запрос к БД:
 ```sql
-SELECT q.*
+SELECT  q.id,
+        q.category_id,
+        q.title,
+        q.answer,
+        COUNT(*) OVER () - 1 AS questions_left
 FROM question q
 LEFT JOIN user_question_schedule uqs
     ON uqs.question_id = q.id
@@ -115,8 +144,8 @@ LEFT JOIN user_question_schedule uqs
 WHERE q.category_id = :categoryId
   AND (
       uqs.question_id IS NULL
-      OR uqs.next_review_at <= :now
-  )
+      OR uqs.next_review_at <= <= EXTRACT(EPOCH FROM now())
+  )AND q.enabled
 ORDER BY uqs.next_review_at NULLS FIRST
 LIMIT 1;
 ```
@@ -155,7 +184,11 @@ sequenceDiagram
 Запрос к БД:
 
 ```sql
-SELECT q.*
+SELECT  q.id,
+        q.category_id,
+        q.title,
+        q.answer,
+        COUNT(*) OVER () - 1 AS questions_left
 FROM question q
 JOIN user_category_selection ucs
     ON ucs.category_id = q.category_id
@@ -163,8 +196,9 @@ JOIN user_category_selection ucs
 LEFT JOIN user_question_schedule uqs
     ON uqs.question_id = q.id
    AND uqs.user_id = :userId
-WHERE uqs.question_id IS NULL
-   OR uqs.next_review_at <= :now
+WHERE (uqs.question_id IS NULL
+        OR uqs.next_review_at <= EXTRACT(EPOCH FROM now()))
+        AND q.enabled
 ORDER BY uqs.next_review_at NULLS FIRST
 LIMIT 1;
 ```
