@@ -27,5 +27,6 @@
 - Data Importer вызывает эндпоинт `POST /api/project/internal/review`
 - Project Service сохраняет ревью в свою SQL БД
 - Project Service формирует Kafka сообщение для топика `reviews.review.created`. Тело содержит информацию о ревью и проекте
-  - Data Importer добавляет в Google таблицу новое ревью
   - Profile Service пересчитывает бейджи (ачивки) пользователя, связанные с написанием ревью
+  - Data Importer игнорирует сообщение потому что тип источника проекта - Data Importer
+  - Telegram Bot игнорирует сообщение потому что тип источника проекта - Data Importer
