@@ -10,11 +10,12 @@
 
 - Пользователь добавляет проект через форму в Mini App, указывая ссылку на GitHub репозиторий, язык, какой проекта роадмапа сдаётся, ссылку на деплой (если есть)
 - Mini App совершает POST запрос `/api/project/project`, тело содержит введённые пользователем данные, Telegram user id можно узнать, посмотрев в subject JWT токена. Gateway направляет запрос к Project Service
-- Project Service сохраяет проект в свою SQL БД. Дата добавления проекта - текущий момент времени
+- Project Service сохраняет проект в свою SQL БД. Дата добавления проекта - текущий момент времени
 - Project Service формирует Kafka сообщение для топика `projects.project.created`. Тело содержит введённые пользователем данные, его Telegram user id, ссылки на Telegram и GitHub профили, тип источника проекта (mini app). Консьюмеры:
   - Telegram Bot формирует Telegram пост и публикует его в чат
   - Data Importer добавляет в Google таблицу новый проект
   - Profile Service пересчитывает бейджи (ачивки) пользователя, связанные с исполнением проектов
+  - Mentor Service определяет (исходя из того, на какие проекты делает ревью данный ментор), каких менторов нужно уведомить о сдаче проекта, и для каждого из них создаёт сообщение в топике `notifications.mentors.project.submitted`
  
   ```mermaid
   sequenceDiagram
@@ -39,6 +40,8 @@
     ProjectService ->> DataImporter: Отправка события projects.project.created<br/>→ добавить проект в Google таблицу
 
     ProjectService ->> ProfileService: Отправка события projects.project.created<br/>→ пересчитать бейджи пользователя
+  
+    ProjectService ->> MentorService: Отправка событий `notifications.mentors.project.submitted`<br/>→ уведомить менторов о сдаче проекта
   ```
 
 ## Добавление проекта через Telegram Bot
@@ -53,6 +56,7 @@
   - Telegram Bot игнорирует сообщение потому что тип источник проекта - Telegram bot
   - Data Importer добавляет в Google таблицу новый проект
   - Profile Service пересчитывает бейджи (ачивки) пользователя, связанные с исполнением проектов
+  - Mentor Service определяет (исходя из того, на какие проекты делает ревью данный ментор), каких менторов нужно уведомить о сдаче проекта, и для каждого из них создаёт сообщение в топике `notifications.mentors.project.submitted`
 
 ```mermaid
 sequenceDiagram
@@ -85,6 +89,8 @@ sequenceDiagram
 
     ProjectService ->> ProfileService: Событие projects.project.created<br/>→ пересчитать бейджи пользователя
     ProfileService ->> ProfileService: Пересчёт бейджей<br/>по проектам пользователя
+
+    ProjectService ->> MentorService: Отправка событий `notifications.mentors.project.submitted`<br/>→ уведомить менторов о сдаче проекта    
 ```
 
 ## Добавление проекта через Data Importer
@@ -100,6 +106,7 @@ sequenceDiagram
   - Telegram Bot игнорирует сообщение потому что тип источника проекта - Data Importer
   - Data Importer игнорирует сообщение потому что тип источника проекта - Data Importer
   - Profile Service пересчитывает бейджи (ачивки) пользователя, связанные с исполнением проектов
+  - Mentor Service игнорирует сообщение потому что тип источника проекта - Data Importer
 
 ```mermaid
 sequenceDiagram
