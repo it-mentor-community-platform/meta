@@ -88,7 +88,7 @@ Telegram id автора узнаем из заголовка.
   "github_repository_url": "https://github.com/zhukovsd/simulation",
   "programming_language": "Java",
   "roadmap_project": "SIMULATION",
-  "added_timestamp:" 123
+  "added_timestamp": 123
 }
 ```
 
@@ -149,8 +149,8 @@ Telegram id автора ревью узнаем из заголовка.
   "roadmap_project": "SIMULATION",
   "author_telegram_user_id": 123,
   "author_telegram_username": "zhukovsd", // опциональный параметр
-  "added_timestamp:" 123, // опциональный параметр
-  "projeсt_source_type": "FRONTEND" // FRONTEND, TELEGRAM_BOT, DATA_IMPORTER
+  "added_timestamp": 123, // опциональный параметр
+  "project_source_type": "FRONTEND" // FRONTEND, TELEGRAM_BOT, DATA_IMPORTER
 }
 ```
 
@@ -209,12 +209,12 @@ Payload сообщения:
 ```
 {
   "author_telegram_user_id": 123,
-  "author_telegram_profile_url": "https://t.me/zhukovsd" // может быть null
+  "author_telegram_profile_url": "https://t.me/zhukovsd", // может быть null
   "github_repository_url": "https://github.com/zhukovsd/simulation",
   "programming_language": "Java",
   "roadmap_project": "SIMULATION",
-  "added_timestamp:" 123,
-  "projeсt_source_type": "FRONTEND" // FRONTEND, TELEGRAM_BOT, DATA_IMPORTER
+  "added_timestamp": 123,
+  "project_source_type": "FRONTEND" // FRONTEND, TELEGRAM_BOT, DATA_IMPORTER
 }
 ```
 
