@@ -4,13 +4,16 @@
 
 ## Общее
 
-Проект должен использовать **Python 3.12**. Синтаксис и возможности более новых версий Python использовать очевидно нельзя
+Проект должен использовать **Python 3.12**.
+Синтаксис и возможности более новых версий Python использовать очевидно нельзя.
 
-[Black](https://github.com/psf/black) обязателен для форматирования Python-кода. Новый код и изменённый код должны быть отформатированы Black
+[Black](https://github.com/psf/black) обязателен для форматирования Python-кода.
+Новый код и изменённый код должны быть отформатированы Black.
 
-Если очень нужно отформатировать что-то вручную без black, то можно поставить комментарий на отключение форматирования, пример в env.py файле
+Если очень нужно отформатировать что-то вручную, без black,
+то можно поставить комментарий на отключение форматирования, пример в `env.py` файле.
 
-[basedpyright](https://github.com/detachhead/basedpyright) желателен для статической проверки типов
+[basedpyright](https://github.com/detachhead/basedpyright) желателен для статической проверки типов.
 
 ## Нейминг
 
@@ -33,13 +36,14 @@ class TelegramRenderer:
 
 
 MAX_MESSAGE_LENGTH = 4096
-TELEGRAM_BOT_TOKEN = "Some string"
-```
 
+def _internal_helper(arg: str) -> None
+    pass
+```
 
 ## Логирование
 
-Для получения logger в каждом модуле:
+Для получения logger'a:
 
 ```python
 import logging
@@ -61,17 +65,16 @@ log.error(f"Failed to process project: {project_id}")
 
 ## Типы
 
-Очень желательно не плодить ошибки/варнинги для типов 
+Очень желательно не плодить ошибки/варнинги для типов.
 
-В текущем коде, такие ошибки есть в местах где нужно сильно заморочиться чтобы правильно расставить типы, в таком случае типы лучше не ставить
+В текущем коде, такие ошибки есть в местах где нужно сильно заморочиться чтобы
+правильно расставить типы, в таком случае типы лучше не ставить.
 
 **Не** использовать deprecated формы:
 
-```python
-List[str]
-Dict[str, int]
-Optional[str]
-```
+~`List[str]`~ -> `list[str]`
+~`Dict[str, int]`~ -> `dict[str, int]`
+~`Optional[str]`~ -> `str | None`
 
 Новые функции должны иметь типы для аргументов и возвращаемого значения:
 
@@ -87,9 +90,9 @@ async def process_project(project_id: int) -> None:
     pass
 ```
 
-## Imports
+## Импорты
 
-Все импорты из самого проекта должны использовать абсолютный `src.`
+Все импорты из самого проекта должны использовать абсолютный `src`.
 
 Правильно:
 
@@ -107,29 +110,9 @@ from ..config import constants
 from .util import something
 ```
 
-## Environment variables
+## Переменные окружения
 
-Работа с environment variables централизуется в `src/config/env.py`.
-
-В application code не следует постоянно делать:
-
-```python
-os.getenv("TELEGRAM_BOT_TOKEN")
-```
-
-Вместо этого значение должно быть получено в `src.config.env` и импортировано:
-
-```python
-from src.config.env import TELEGRAM_BOT_TOKEN
-```
-
-Environment variables объявляются как module-level constants:
-
-```python
-TELEGRAM_BOT_TOKEN: str = os.getenv("TELEGRAM_BOT_TOKEN")
-```
-
-Для переменных с допустимым default value default указывается непосредственно при чтении:
+Для переменных с допустимым дефолтом, он указывается непосредственно при чтении:
 
 ```python
 SEND_PROJECTS_TO_CHAT: bool = (
@@ -137,11 +120,7 @@ SEND_PROJECTS_TO_CHAT: bool = (
 )
 ```
 
-Проект уже использует именно такой подход.
-
-### Required environment variables
-
-Если environment variable **обязательна для работы приложения**, после её чтения должен существовать invariant, гарантирующий, что значение не `None`:
+Если переменная окружения **обязательна для работы приложения**, надо добавить ассерт:
 
 ```python
 assert TELEGRAM_BOT_TOKEN is not None, (
@@ -149,19 +128,10 @@ assert TELEGRAM_BOT_TOKEN is not None, (
 )
 ```
 
-В `src/config/env.py` проект уже проверяет таким образом обязательные настройки.
+## Ассерты
 
-Не делайте optional значение обязательным только через type annotation:
-
-```python
-TELEGRAM_BOT_TOKEN: str = os.getenv("TELEGRAM_BOT_TOKEN")
-```
-
-Сам annotation не гарантирует наличие значения. Runtime invariant должен быть явно проверен через `assert`.
-
-## 7. Assertions и invariants
-
-`assert` используется для проверки **invariants** — условий, которые должны быть истинными в корректно работающем приложении.
+`assert` используется для проверки условий, которые должны быть истинными
+в корректно работающем приложении>
 
 Например:
 
@@ -173,27 +143,12 @@ assert chat is not None, "Chat cannot be None"
 
 После этого кода можно безопасно считать `chat` существующим.
 
-То же относится к configuration:
+Смысл ассертов:
 
-```python
-assert POSTGRES_HOST is not None, (
-    "POSTGRES_HOST environment variable is not set"
-)
-```
+> Если это условие не выполняется, приложение находится в недопустимом состоянии
+> и продолжать нормальную работу нельзя
 
-Смысл assertion здесь:
-
-> Если это условие не выполняется, приложение находится в недопустимом состоянии и продолжать нормальную работу нельзя.
-
-Используйте `assert` для таких внутренних invariants:
-
-```python
-assert user is not None
-assert configuration_value is not None
-assert required_dependency is initialized
-```
-
-Не используйте `assert` для обычной обработки пользовательского ввода или других ожидаемых runtime ошибок.
+`assert` не нужны для обычной обработки пользовательского ввода или других ожидаемых ошибок.
 
 Например, это неправильно:
 
@@ -205,34 +160,5 @@ assert user_input in allowed_commands
 
 ```python
 if user_input not in allowed_commands:
-    ...
     return
 ```
-
-Разница принципиальная:
-
-* `assert` — «это **обязательно должно быть истинно**, иначе состояние программы некорректно»;
-* `if` — «это нормальная ситуация, которую программа должна обработать».
-
-## 8. Checklist
-
-Перед созданием PR проверьте:
-
-* [ ] Используется Python 3.12 syntax.
-* [ ] Код отформатирован **Black**.
-* [ ] Код проходит проверку **basedpyright**.
-* [ ] Functions и variables используют `snake_case`.
-* [ ] Classes используют `PascalCase`.
-* [ ] Constants используют `SCREAMING_SNAKE_CASE`.
-* [ ] Новые функции имеют type annotations.
-* [ ] Используются современные annotations: `list[str]`, `dict[str, ...]`, `X | None` и т. п.
-* [ ] Logger получен через `logging.getLogger(__name__)`.
-* [ ] Для application logging не используется `print()`.
-* [ ] Imports проекта используют только `src.*`.
-* [ ] Environment variables читаются через `src/config/env.py`.
-* [ ] Обязательные environment variables проверяются через `assert`.
-* [ ] Assertions используются только для invariants, которые обязаны быть истинными.
-* [ ] Пользовательский input проверяется через обычный control flow, а не через `assert`.
-* [ ] Async-код использует `async`/`await` корректно.
-* [ ] Внешние операции имеют необходимую обработку ошибок.
-* [ ] Не внесено unrelated formatting/refactoring.
