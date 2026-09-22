@@ -175,6 +175,7 @@ Telegram id автора ревью узнаем из заголовка.
   "project_github_repository_url": "https://github.com/zhukovsd/simulation",
   "review_url": "https://gist.github.com/zhukovsd/123456",
   "reviewer_telegram_user_id": 123,
+  "reviewer_telegram_profile_url": "https://t.me/Raketa4000",
   "added_timestamp": 123 // опциональный параметр
 }
 ```
