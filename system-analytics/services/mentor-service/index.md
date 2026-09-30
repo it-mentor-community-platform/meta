@@ -104,7 +104,6 @@ erDiagram
 
 ```
 {
-  "id": 1,
   "mentorTelegramUserId": 123456,
   "telegramUrl": "https://t.me/zhukovsd",
   "description": {
