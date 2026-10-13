@@ -2,11 +2,11 @@
 
 ## Необходимый контекст
 
-- Google Spreadsheet [таблица](https://docs.google.com/spreadsheets/d/1E66YrdvO7B_j0Ykge-JJDMtB1RfKhIzN_SsO7UPDbrU/edit?gid=0#gid=0), лист "projects". Пополняется вручную
+- Google Spreadsheet [таблица](https://docs.google.com/spreadsheets/d/1E66YrdvO7B_j0Ykge-JJDMtB1RfKhIzN_SsO7UPDbrU/edit?gid=537267005#gid=537267005), лист "Reviews". Пополняется вручную
 
 ## Способы добавления ревью
 
-- Через интерфейс Telegram mini ap
+- Через интерфейс Telegram mini app
 - Импорт из Google таблицы
 
 ## Хранилище ревью
