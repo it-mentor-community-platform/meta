@@ -31,13 +31,13 @@ erDiagram
     ImportType ||--o{ ImportExecution : "имеет запуски импорта"
 
     ImportType {
-        string id PK
+        int id PK
         string code
     }
 
     ImportExecution {
         string id PK
-        string type FK
+        int type FK
         string status
         datetime startedAt
         datetime finishedAt
