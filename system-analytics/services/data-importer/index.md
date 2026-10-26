@@ -22,6 +22,32 @@
 
 - Запросы к REST эндпоинту [`POST /api/auth/internal/user`](https://github.com/it-mentor-community-platform/meta/blob/main/system-analytics/services/auth-service/index.md#%D0%B2%D0%BD%D1%83%D1%82%D1%80%D0%B5%D0%BD%D0%BD%D0%B8%D0%B9-%D1%8D%D0%BD%D0%B4%D0%BF%D0%BE%D0%B8%D0%BD%D1%82-%D0%B4%D0%BB%D1%8F-%D1%81%D0%BE%D0%B7%D0%B4%D0%B0%D0%BD%D0%B8%D1%8F-%D0%BF%D0%BE%D0%BB%D1%8C%D0%B7%D0%BE%D0%B2%D0%B0%D1%82%D0%B5%D0%BB%D0%B5%D0%B9) Auth Servic'а для создания пользователя
 
+## ER-диаграмма запуска импорта
+
+### Диаграмма
+
+```mermaid
+erDiagram
+    ImportType ||--o{ ImportExecution : "имеет запуски импорта"
+
+    ImportType {
+        string id PK
+        string code
+    }
+
+    ImportExecution {
+        string id PK
+        string type FK
+        string status
+        datetime startedAt
+        datetime finishedAt
+        int successCount
+        int errorCount
+        string sourceReadStatus
+    }
+```
+[Описание сущностей и связей](https://github.com/it-mentor-community-platform/meta/blob/main/system-analytics/services/data-importer/er-import-entities-and-relations.md)
+
 ## Схема REST API
 
 Для всех методов передаются [кастомные заголовки запроса](https://github.com/it-mentor-community-platform/meta/blob/main/system-analytics/services/gateway/index.md#%D0%BF%D1%80%D0%B0%D0%B2%D0%B8%D0%BB%D0%B0-security) с Telegram Id и ролями пользователя (но принимаются только необходимые в рамках конкретного запроса).
@@ -155,3 +181,5 @@ Consumer group - `data-importer-cg`.
 Используется для добавления записи о ревью в Google Spreadsheet таблицу. 
 
 Payload сообщения - https://github.com/it-mentor-community-platform/meta/blob/main/system-analytics/services/project-service/index.md#producer-%D0%B4%D0%BB%D1%8F-%D1%82%D0%BE%D0%BF%D0%B8%D0%BA%D0%B0-reviewsreviewcreated.
+
+
