@@ -36,7 +36,7 @@ erDiagram
     }
 
     ImportExecution {
-        string id PK
+        int id PK
         int type FK
         string status
         datetime startedAt
