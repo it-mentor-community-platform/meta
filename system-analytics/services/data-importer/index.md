@@ -155,3 +155,75 @@ Consumer group - `data-importer-cg`.
 Используется для добавления записи о ревью в Google Spreadsheet таблицу. 
 
 Payload сообщения - https://github.com/it-mentor-community-platform/meta/blob/main/system-analytics/services/project-service/index.md#producer-%D0%B4%D0%BB%D1%8F-%D1%82%D0%BE%D0%BF%D0%B8%D0%BA%D0%B0-reviewsreviewcreated.
+
+## ER-диаграмма запуска импорта
+
+### Диаграмма
+
+```mermaid
+erDiagram
+    ImportType ||--o{ ImportExecution : "имеет запуски импорта"
+
+    ImportType {
+        string code PK
+    }
+
+    ImportExecution {
+        string id PK
+        string type FK
+        string status
+        datetime startedAt
+        datetime finishedAt
+        int successCount
+        int errorCount
+        string sourceReadStatus
+    }
+```
+
+### Сущность `ImportType`
+
+`ImportType` — классификатор типа импорта.
+
+Атрибут - `code`, ключ - `PK`
+
+### Допустимые значения `code`
+
+- `USERS`
+- `PROFILES`
+- `PROJECTS`
+- `REVIEWS`
+- `MENTORS`
+- `GUARANTEED_REVIEWS`
+- `QUESTIONS`
+
+### Сущность `ImportExecution`
+
+`ImportExecution` — конкретный запуск импорта.
+
+| Атрибут | Ключ |
+|---|---|
+| `id` | PK |
+| `type` | FK |
+| `status` | — |
+| `startedAt` | — |
+| `finishedAt` | — |
+| `successCount` | — |
+| `errorCount` | — |
+| `sourceReadStatus` | — |
+
+### Ключи
+
+### Первичный ключ
+
+- `ImportType`: `code`
+- `ImportExecution`: `id`
+
+### Внешний ключ
+
+- `ImportExecution`: `type` → `ImportType.code`
+
+### Связь между сущностями
+
+| Связь | Кардинальность | Описание |
+|---|---|---|
+| `ImportType` — `ImportExecution` | `1 : 0..*` | Один тип импорта может иметь 0 или множество запусков импорта. Каждый запуск импорта относится ровно к одному типу импорта. |
