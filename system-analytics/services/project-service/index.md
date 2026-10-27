@@ -149,7 +149,7 @@ Telegram id пользователя узнаем из заголовка.
 {
   "HANGMAN": ["Java", "Python"],
   "SIMULATION": ["Java"],
-  "CURRENCY-EXCHANGE": ["C#"]
+  "CURRENCY_EXCHANGE": ["C#"]
 }
 ```
 
