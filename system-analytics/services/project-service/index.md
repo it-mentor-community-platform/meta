@@ -162,6 +162,43 @@ Telegram id пользователя узнаем из заголовка.
 - 500 - неизвестная ошибка
 - 403 - у пользователя нет роли `STUDENT`
 
+### Реализации пользователя по типу проекта
+
+`GET /api/project/projects/my?roadmap_project=${:roadmap_project}`
+
+Возвращает реализации пользователя для одного типа проекта роадмапа. Используется на странице проекта (список «Мои реализации»).
+
+Telegram id пользователя узнаем из заголовка.
+
+Параметры запроса:
+
+- `roadmap_project` - обязательный, тип проекта роадмапа (`HANGMAN`, `SIMULATION`, ..., `OTHER`)
+
+Ответ в случае успеха: `200 OK`. Тело - массив объектов в формате ответа на `POST /api/project/project`:
+
+```
+[
+  {
+    "id": 42,
+    "author_telegram_user_id": 123,
+    "github_repository_url": "https://github.com/zhukovsd/currency-exchange",
+    "programming_language": "Java",
+    "roadmap_project": "CURRENCY_EXCHANGE",
+    "added_timestamp": 1773273600
+  }
+]
+```
+
+- Сортировка - по `added_timestamp` по убыванию (сначала новые)
+- Если реализаций нет - `[]`
+- Без пагинации: реализаций одного проекта у пользователя единицы
+
+Коды ошибок:
+
+- 500 - неизвестная ошибка
+- 400 - параметр `roadmap_project` не передан или содержит неизвестный тип проекта
+- 403 - у пользователя нет роли `STUDENT`
+
 ### Внутренний эндпоинт для добавления проекта из Telegram бота или Data Importer
 
 `POST /api/project/internal/project`
