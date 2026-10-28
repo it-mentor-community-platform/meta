@@ -52,7 +52,8 @@ A-->>C: Ответ с заголовком X-Access-Token: JWT
 
 ### Шаги
 
-- `POST /api/auth/by-dummy`, тело содержит `user_id` (не телеграм!) и `roles`.
+- `POST /api/auth/by-dummy`, тело содержит `roles` и одно из полей: `telegram_user_id`, `telegram_url` или `github_profile_url`.
+- Для ссылки Auth Service находит профиль в Profile Service и берёт его `telegram_user_id`.
 - Auth Service проверяет существование пользователя. Если не существует  - возвращаем `404 Not Found`.
 - Генерируем JWT access токен, устанавливаем в заголовок ответа `X-Access-Token`.
 
