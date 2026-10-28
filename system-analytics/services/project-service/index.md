@@ -27,6 +27,7 @@ erDiagram
         string programming_language "Java, Python, ..."
         string roadmap_project "HANGMAN, SIMULATION, ..., OTHER"
         bigint added_timestamp "Unix timestamp момента добавления проекта"
+        string deployment_url "nullable, только для типов проектов с деплоем"
     }
 
     Reviews {
@@ -71,9 +72,10 @@ erDiagram
 
 ```
 {
-  "github_repository_url": "https://github.com/zhukovsd/simulation",
+  "github_repository_url": "https://github.com/zhukovsd/currency-exchange",
   "programming_language": "Java",
-  "roadmap_project": "SIMULATION"
+  "roadmap_project": "CURRENCY_EXCHANGE",
+  "deployment_url": "https://currency.zhukovsd.it" // опциональный параметр
 }
 ```
 
@@ -85,17 +87,21 @@ Telegram id автора узнаем из заголовка.
 {
   "id": 0,
   "author_telegram_user_id": 123,
-  "github_repository_url": "https://github.com/zhukovsd/simulation",
+  "github_repository_url": "https://github.com/zhukovsd/currency-exchange",
   "programming_language": "Java",
-  "roadmap_project": "SIMULATION",
-  "added_timestamp": 123
+  "roadmap_project": "CURRENCY_EXCHANGE",
+  "added_timestamp": 123,
+  "deployment_url": "https://currency.zhukovsd.it" // null, если не указана
 }
 ```
+
+- Деплой может существовать у типов проектов `CURRENCY_EXCHANGE`, `TENNIS_SCOREBOARD`, `WEATHER_VIEWER`, `CLOUD_FILE_STORAGE`, `TASK_TRACKER`. У остальных типов (`HANGMAN`, `SIMULATION`, `OTHER`) `deployment_url` всегда `null`, передача непустого значения - `400`
+- Доступность ресурса по ссылке и уникальность ссылки не проверяются
 
 Коды ошибок:
 
 - 500 - неизвестная ошибка
-- 400 - невалидное тело запроса (включая неизвестный тип проекта роадмапа)
+- 400 - невалидное тело запроса (включая неизвестный тип проекта роадмапа, невалидную ссылку на деплой и ссылку на деплой для типа проекта, который его не поддерживает)
 - 409 - проект по данной ссылке на репозиторий уже существует
 
 ### Добавление ревью пользователем с фронтенда
@@ -184,7 +190,8 @@ Telegram id пользователя узнаем из заголовка.
     "github_repository_url": "https://github.com/zhukovsd/currency-exchange",
     "programming_language": "Java",
     "roadmap_project": "CURRENCY_EXCHANGE",
-    "added_timestamp": 1773273600
+    "added_timestamp": 1773273600,
+    "deployment_url": "https://currency.zhukovsd.it"
   }
 ]
 ```
@@ -275,10 +282,11 @@ Payload сообщения:
 {
   "author_telegram_user_id": 123,
   "author_telegram_profile_url": "https://t.me/zhukovsd", // может быть null
-  "github_repository_url": "https://github.com/zhukovsd/simulation",
+  "github_repository_url": "https://github.com/zhukovsd/currency-exchange",
   "programming_language": "Java",
-  "roadmap_project": "SIMULATION",
+  "roadmap_project": "CURRENCY_EXCHANGE",
   "added_timestamp": 123,
+  "deployment_url": "https://currency.zhukovsd.it", // может быть null, всегда null для TELEGRAM_BOT и DATA_IMPORTER
   "project_source_type": "FRONTEND" // FRONTEND, TELEGRAM_BOT, DATA_IMPORTER
 }
 ```
