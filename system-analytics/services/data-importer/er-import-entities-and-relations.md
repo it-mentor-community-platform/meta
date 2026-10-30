@@ -37,12 +37,12 @@
 
 #### Первичный ключ
 
-- `ImportType`: `code`
+- `ImportType`: `id`
 - `ImportExecution`: `id`
 
 #### Внешний ключ
 
-- `ImportExecution`: `type` → `ImportType.code`
+- `ImportExecution`: `type` → `ImportType.id`
 
 ### Связь между сущностями
 
