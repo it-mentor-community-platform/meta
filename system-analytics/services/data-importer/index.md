@@ -68,7 +68,7 @@ erDiagram
 
 ### Запуск импорта
 
-`POST /api/data-importer/imports`
+`POST /api/data-importer/import`
 
 Запускает асинхронный импорт данных указанного типа.
 
