@@ -334,6 +334,27 @@ Payload сообщения:
 }
 ```
 
+### Producer для топика `projects.project.updated`
+
+Используется для уведомления других сервисов об изменении реализации через `PATCH /api/project/projects/${:id}`. Консьюмеры, хранящие у себя ссылку на репозиторий, находят по `previous_github_repository_url` свои записи и обновляют их.
+
+Payload сообщения - текущее состояние реализации в формате ответа на `POST /api/project/project` и ссылка на репозиторий до изменения (`previous_github_repository_url`):
+
+```
+{
+  "id": 42,
+  "author_telegram_user_id": 123,
+  "github_repository_url": "https://github.com/zhukovsd/currency-exchange-spring",
+  "previous_github_repository_url": "https://github.com/zhukovsd/currency-exchange", // равна github_repository_url, если ссылка на репозиторий не менялась
+  "programming_language": "Java",
+  "roadmap_project": "CURRENCY_EXCHANGE",
+  "added_timestamp": 1773273600,
+  "deployment_url": "https://currency.zhukovsd.it" // может быть null
+}
+```
+
+Отправляется после сохранения изменений в БД, только если хоть одно поле фактически изменилось.
+
 ### Producer для топика `notifications.students.review.submitted`
 
 Используется для уведомления студента о том, что ментор добавил ревью на его проект.
