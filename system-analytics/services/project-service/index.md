@@ -218,7 +218,7 @@ Telegram id пользователя узнаем из заголовка. Ре�
 
 ```
 {
-  "github_repository_url": "https://github.com/zhukovsd/currency-exchange-spring", // опциональный параметр
+  "github_repository_url": "https://github.com/zhukovsd/currency-exchange-spring"
   "deployment_url": "https://currency.zhukovsd.it" // опциональный параметр, null - удалить ссылку
 }
 ```
