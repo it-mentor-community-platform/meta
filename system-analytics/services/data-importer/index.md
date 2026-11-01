@@ -1,4 +1,4 @@
-[data-importer-rest-api-updated.md](https://github.com/user-attachments/files/34186003/data-importer-rest-api-updated.md)# Data Importer
+# Data Importer
 
 ## Необходимый контекст
 
@@ -31,16 +31,16 @@ erDiagram
     ImportType ||--o{ ImportExecution : "имеет запуски импорта"
 
     ImportType {
-        string id PK
+        bigint id PK
         string code
     }
 
     ImportExecution {
-        string id PK
+        bigint id PK
         string type FK
         string status
-        datetime startedAt
-        datetime finishedAt
+        bigint startedAt
+        bigint finishedAt
         int successCount
         int errorCount
         string sourceReadStatus
@@ -232,6 +232,3 @@ Consumer group - `data-importer-cg`.
 Используется для добавления записи о ревью в Google Spreadsheet таблицу. 
 
 Payload сообщения - https://github.com/it-mentor-community-platform/meta/blob/main/system-analytics/services/project-service/index.md#producer-%D0%B4%D0%BB%D1%8F-%D1%82%D0%BE%D0%BF%D0%B8%D0%BA%D0%B0-reviewsreviewcreated.
-
-[data-importer-rest-api.md](https://github.com/user-attachments/files/34144441/data-importer-rest-api.md)
-
