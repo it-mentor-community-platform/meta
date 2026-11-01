@@ -11,7 +11,7 @@
 - Пользователь добавляет проект через форму в Mini App, указывая ссылку на GitHub репозиторий, язык, какой проекта роадмапа сдаётся, ссылку на деплой (если есть)
 - Mini App совершает POST запрос `/api/project/project`, тело содержит введённые пользователем данные, Telegram user id можно узнать, посмотрев в subject JWT токена. Gateway направляет запрос к Project Service
 - Project Service сохраняет проект в свою SQL БД. Дата добавления проекта - текущий момент времени
-- Project Service формирует Kafka сообщение для топика `projects.project.created`. Тело содержит введённые пользователем данные, его Telegram user id, ссылки на Telegram и GitHub профили, тип источника проекта (mini app). Консьюмеры:
+- Project Service формирует Kafka сообщение для топика `projects.project.created`. Тело содержит введённые пользователем данные (включая ссылку на деплой, если указана), его Telegram user id, ссылки на Telegram и GitHub профили, тип источника проекта (mini app). Консьюмеры:
   - Telegram Bot формирует Telegram пост и публикует его в чат
   - Data Importer добавляет в Google таблицу новый проект
   - Profile Service пересчитывает бейджи (ачивки) пользователя, связанные с исполнением проектов
@@ -142,5 +142,39 @@ sequenceDiagram
 
         ProjectService ->> ProfileService: Событие projects.project.created<br/>→ пересчитать бейджи пользователя
         ProfileService ->> ProfileService: Пересчёт бейджей<br/>по проектам пользователя
+    end
+```
+
+## Изменение реализации через Telegram Mini App
+
+### Шаги
+
+- Пользователь на странице реализации меняет ссылку на GitHub репозиторий и/или добавляет, меняет или удаляет ссылку на деплой
+- Mini App совершает запрос `PATCH /api/project/projects/${:id}`, тело содержит изменённые поля, Telegram user id можно узнать, посмотрев в subject JWT токена. Gateway направляет запрос к Project Service
+- Project Service проверяет, что реализация принадлежит пользователю, валидирует поля, сохраняет изменения в свою SQL БД и отвечает текущим состоянием реализации. Правила - [`PATCH /api/project/projects/${:id}`](https://github.com/it-mentor-community-platform/meta/blob/main/system-analytics/services/project-service/index.md#%D0%B8%D0%B7%D0%BC%D0%B5%D0%BD%D0%B5%D0%BD%D0%B8%D0%B5-%D1%80%D0%B5%D0%B0%D0%BB%D0%B8%D0%B7%D0%B0%D1%86%D0%B8%D0%B8-%D0%BF%D0%BE%D0%BB%D1%8C%D0%B7%D0%BE%D0%B2%D0%B0%D1%82%D0%B5%D0%BB%D0%B5%D0%BC)
+- Если хоть одно поле фактически изменилось, Project Service формирует Kafka сообщение для топика `projects.project.updated`. Тело содержит текущее состояние реализации и ссылку на репозиторий до изменения. Консьюмеры:
+  - Data Importer, если изменилась ссылка на репозиторий, находит в Google таблице ряды со старой ссылкой (листы "Projects", "Reviews", "Спонсируемые ревью") и заменяет её на новую. Изменение только ссылки на деплой игнорирует. Детали - [consumer](https://github.com/it-mentor-community-platform/meta/blob/main/system-analytics/services/data-importer/index.md#consumer-%D0%B4%D0%BB%D1%8F-%D1%82%D0%BE%D0%BF%D0%B8%D0%BA%D0%B0-projectsprojectupdated) в Data Importer
+
+```mermaid
+sequenceDiagram
+    participant MiniApp as Mini App
+    participant ProjectService as Project Service
+    participant SQLDB as SQL БД (Projects)
+    participant DataImporter as Data Importer
+    participant GoogleSheet as Google Sheets
+
+    MiniApp ->>+ ProjectService: PATCH /api/project/projects/${id}<br/>(изменённые поля в теле +<br/>telegram_user_id в токене)
+
+    ProjectService ->> SQLDB: Сохранение изменений
+    ProjectService -->>- MiniApp: 200 OK (текущее состояние реализации)
+
+    opt Хоть одно поле фактически изменилось
+        ProjectService ->> DataImporter: Событие projects.project.updated<br/>(реализация + previous_github_repository_url)
+
+        opt Изменилась ссылка на репозиторий
+            DataImporter ->>+ GoogleSheet: Поиск рядов со старой ссылкой<br/>(Projects, Reviews, Спонсируемые ревью)
+            GoogleSheet -->>- DataImporter: Найденные ряды
+            DataImporter ->> GoogleSheet: Замена старой ссылки на новую<br/>(Projects: D-G, Reviews: D, Спонсируемые ревью: B)
+        end
     end
 ```

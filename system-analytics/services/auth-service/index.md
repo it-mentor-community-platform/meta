@@ -20,6 +20,7 @@
 
 Исходящие:
 - Kafka
+- REST вызовы в Profile Service (поиск профиля для Dummy аутентификации)
 
 ## Схема БД
 
@@ -91,18 +92,29 @@ erDiagram
 Тело запроса (`Content-Type: application-json`)
 ```
 {
-  "user_id": 1, // Users.id, а не Users.telegram_user_id!
-  "roles": ["ROLE_1", "ROLE_2"],
-  "telegram_username": "zhukovsd"
+  // ровно одно из трёх полей:
+  "telegram_user_id": 123456789,
+  "telegram_url": "https://t.me/zhukovsd",
+  "github_profile_url": "https://github.com/zhukovsd",
+
+  "roles": ["ROLE_1", "ROLE_2"]
 }
 ```
+
+Поиск пользователя:
+- `telegram_user_id` - ищем в `Users` по `telegram_user_id`
+- `telegram_url` - находим профиль через [поиск профиля по ссылке на Telegram](../profile-service/index.md#внутренний-эндпоинт-поиска-профиля-по-ссылке-на-telegram) в Profile Service
+- `github_profile_url` - находим профиль через [поиск профиля по ссылке на GitHub аккаунт](../profile-service/index.md#внутренний-эндпоинт-поиска-профиля-по-ссылке-на-github-аккаунт) в Profile Service
+
+Формат ссылок проверяет Profile Service, его `400` возвращаем как свой `400`.
 
 Ответ в случае успеха: `200 OK` с JWT токеном, установленном в кастомный заголовок `X-Access-Token`.
 
 Коды ошибок:
 
-- 400 - ошибки валидации (пример - неизвестные системе роли)
-- 500 - неизвестная ошибка
+- 400 - ошибки валидации (примеры - не передано ни одного или передано больше одного поля для поиска пользователя, некорректная ссылка, неизвестные системе роли)
+- 404 - пользователь не найден
+- 500 - неизвестная ошибка (в том числе недоступность Profile Service)
 
 ### Внутренний эндпоинт для создания пользователей
 

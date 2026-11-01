@@ -27,6 +27,7 @@ erDiagram
         string programming_language "Java, Python, ..."
         string roadmap_project "HANGMAN, SIMULATION, ..., OTHER"
         bigint added_timestamp "Unix timestamp момента добавления проекта"
+        string deployment_url "nullable, только для типов проектов с деплоем"
     }
 
     Reviews {
@@ -71,9 +72,10 @@ erDiagram
 
 ```
 {
-  "github_repository_url": "https://github.com/zhukovsd/simulation",
+  "github_repository_url": "https://github.com/zhukovsd/currency-exchange",
   "programming_language": "Java",
-  "roadmap_project": "SIMULATION"
+  "roadmap_project": "CURRENCY_EXCHANGE",
+  "deployment_url": "https://currency.zhukovsd.it" // опциональный параметр
 }
 ```
 
@@ -85,17 +87,21 @@ Telegram id автора узнаем из заголовка.
 {
   "id": 0,
   "author_telegram_user_id": 123,
-  "github_repository_url": "https://github.com/zhukovsd/simulation",
+  "github_repository_url": "https://github.com/zhukovsd/currency-exchange",
   "programming_language": "Java",
-  "roadmap_project": "SIMULATION",
-  "added_timestamp": 123
+  "roadmap_project": "CURRENCY_EXCHANGE",
+  "added_timestamp": 123,
+  "deployment_url": "https://currency.zhukovsd.it" // null, если не указана
 }
 ```
+
+- Деплой может существовать у типов проектов `CURRENCY_EXCHANGE`, `TENNIS_SCOREBOARD`, `WEATHER_VIEWER`, `CLOUD_FILE_STORAGE`, `TASK_TRACKER`. У остальных типов (`HANGMAN`, `SIMULATION`, `OTHER`) `deployment_url` всегда `null`, передача непустого значения - `400`
+- Доступность ресурса по ссылке и уникальность ссылки не проверяются
 
 Коды ошибок:
 
 - 500 - неизвестная ошибка
-- 400 - невалидное тело запроса (включая неизвестный тип проекта роадмапа)
+- 400 - невалидное тело запроса (включая неизвестный тип проекта роадмапа, невалидную ссылку на деплой и ссылку на деплой для типа проекта, который его не поддерживает)
 - 409 - проект по данной ссылке на репозиторий уже существует
 
 ### Добавление ревью пользователем с фронтенда
@@ -134,6 +140,114 @@ Telegram id автора ревью узнаем из заголовка.
 - 500 - неизвестная ошибка
 - 400 - невалидное тело запроса
 - 404 - проект с указанным `project_github_repository_url` не найден
+
+### Сводка по проектам пользователя
+
+`GET /api/project/projects/my/summary`
+
+Возвращает языки сданных реализаций по каждому типу проекта роадмапа. Используется на экране «Мои проекты», прогресс по роадмапам фронтенд считает из этого ответа.
+
+Telegram id пользователя узнаем из заголовка.
+
+Ответ в случае успеха: `200 OK`. Тело - объект, ключи которого - типы проектов роадмапа:
+
+```
+{
+  "HANGMAN": ["Java", "Python"],
+  "SIMULATION": ["Java"],
+  "CURRENCY_EXCHANGE": ["C#"]
+}
+```
+
+- Типы проектов, по которым у пользователя нет реализаций, в ответ не попадают. Если реализаций нет совсем - `{}`
+- Языки - уникальные значения `programming_language` в том виде, в котором они сохранены, в порядке первой сдачи реализации на этом языке (`added_timestamp` по возрастанию)
+- `OTHER` возвращается наравне с остальными типами, клиент сам решает, что отображать
+
+Коды ошибок:
+
+- 500 - неизвестная ошибка
+- 403 - у пользователя нет роли `STUDENT`
+
+### Реализации пользователя по типу проекта
+
+`GET /api/project/projects/my?roadmap_project=${:roadmap_project}`
+
+Возвращает реализации пользователя для одного типа проекта роадмапа. Используется на странице проекта (список «Мои реализации»).
+
+Telegram id пользователя узнаем из заголовка.
+
+Параметры запроса:
+
+- `roadmap_project` - обязательный, тип проекта роадмапа (`HANGMAN`, `SIMULATION`, ..., `OTHER`)
+
+Ответ в случае успеха: `200 OK`. Тело - массив объектов в формате ответа на `POST /api/project/project`:
+
+```
+[
+  {
+    "id": 42,
+    "author_telegram_user_id": 123,
+    "github_repository_url": "https://github.com/zhukovsd/currency-exchange",
+    "programming_language": "Java",
+    "roadmap_project": "CURRENCY_EXCHANGE",
+    "added_timestamp": 1773273600,
+    "deployment_url": "https://currency.zhukovsd.it"
+  }
+]
+```
+
+- Сортировка - по `added_timestamp` по убыванию (сначала новые)
+- Если реализаций нет - `[]`
+- Без пагинации: реализаций одного проекта у пользователя единицы
+
+Коды ошибок:
+
+- 500 - неизвестная ошибка
+- 400 - параметр `roadmap_project` не передан или содержит неизвестный тип проекта
+- 403 - у пользователя нет роли `STUDENT`
+
+### Изменение реализации пользователем
+
+`PATCH /api/project/projects/${:id}`
+
+Изменение реализации её автором: замена ссылки на GitHub-репозиторий и добавление, изменение или удаление ссылки на деплой. Используется на странице реализации.
+
+Telegram id пользователя узнаем из заголовка. Реализация должна принадлежать ему.
+
+Тело запроса (`Content-Type: application/json`) - одно или оба поля:
+
+```
+{
+  "github_repository_url": "https://github.com/zhukovsd/currency-exchange-spring"
+  "deployment_url": "https://currency.zhukovsd.it" // опциональный параметр, null - удалить ссылку
+}
+```
+
+Семантика полей:
+
+- Поле не передано - значение не меняется
+- `github_repository_url` - новая ссылка на репозиторий. Удалить её нельзя: `null` или пустая строка - `400`
+- `deployment_url` - новая ссылка на деплой, `null` - удалить. Пустая строка - `400` (для удаления передаётся `null`)
+- Тело без поля `github_repository_url`  - `400`
+- Прочие поля (`programming_language`, `roadmap_project`, `added_timestamp` и т.д.) не принимаются - `400`
+
+Правила:
+
+- `github_repository_url` валидируется так же, как в `POST /api/project/project`. Уникальность проверяется среди остальных реализаций: ссылка, совпадающая с текущей ссылкой этой же реализации, - не конфликт, а изменение без эффекта
+- `deployment_url` - правила те же, что в `POST /api/project/project`: только для типов проектов с деплоем, ссылка с `https://`, доступность и уникальность не проверяются. Для типов без деплоя `null` допустим (ничего не меняет), непустое значение - `400`
+- Изменение атомарно: если хоть одно поле не прошло валидацию или проверку уникальности, не меняется ни одно из полей
+- Тип проекта, язык и дата сдачи не меняются, ревью и прогресс не затрагиваются
+- Если хоть одно поле фактически изменилось, после сохранения отправляется сообщение в топик `projects.project.updated`. Изменение без эффекта (переданы текущие значения) сообщений не порождает
+
+Ответ в случае успеха: `200 OK`. Тело - текущее состояние реализации (со всеми полями, а не только теми, что были переданы в PATCH запросе) в формате ответа на `POST /api/project/project`.
+
+Коды ошибок:
+
+- 500 - неизвестная ошибка
+- 400 - невалидное тело запроса (включая невалидные ссылки на репозиторий и деплой, ссылку на деплой для типа проекта, который его не поддерживает, тело без изменяемых полей и неизменяемые поля)
+- 403 - у пользователя нет роли `STUDENT`
+- 404 - реализация не найдена или принадлежит другому пользователю (не различаем, чтобы не раскрывать существование чужих реализаций)
+- 409 - другая реализация с такой ссылкой на репозиторий уже существует
 
 ### Внутренний эндпоинт для добавления проекта из Telegram бота или Data Importer
 
@@ -211,13 +325,35 @@ Payload сообщения:
 {
   "author_telegram_user_id": 123,
   "author_telegram_profile_url": "https://t.me/zhukovsd", // может быть null
-  "github_repository_url": "https://github.com/zhukovsd/simulation",
+  "github_repository_url": "https://github.com/zhukovsd/currency-exchange",
   "programming_language": "Java",
-  "roadmap_project": "SIMULATION",
+  "roadmap_project": "CURRENCY_EXCHANGE",
   "added_timestamp": 123,
+  "deployment_url": "https://currency.zhukovsd.it", // может быть null, всегда null для TELEGRAM_BOT и DATA_IMPORTER
   "project_source_type": "FRONTEND" // FRONTEND, TELEGRAM_BOT, DATA_IMPORTER
 }
 ```
+
+### Producer для топика `projects.project.updated`
+
+Используется для уведомления других сервисов об изменении реализации через `PATCH /api/project/projects/${:id}`. Консьюмеры, хранящие у себя ссылку на репозиторий, находят по `previous_github_repository_url` свои записи и обновляют их.
+
+Payload сообщения - текущее состояние реализации в формате ответа на `POST /api/project/project` и ссылка на репозиторий до изменения (`previous_github_repository_url`):
+
+```
+{
+  "id": 42,
+  "author_telegram_user_id": 123,
+  "github_repository_url": "https://github.com/zhukovsd/currency-exchange-spring",
+  "previous_github_repository_url": "https://github.com/zhukovsd/currency-exchange", // равна github_repository_url, если ссылка на репозиторий не менялась
+  "programming_language": "Java",
+  "roadmap_project": "CURRENCY_EXCHANGE",
+  "added_timestamp": 1773273600,
+  "deployment_url": "https://currency.zhukovsd.it" // может быть null
+}
+```
+
+Отправляется после сохранения изменений в БД, только если хоть одно поле фактически изменилось.
 
 ### Producer для топика `notifications.students.review.submitted`
 
