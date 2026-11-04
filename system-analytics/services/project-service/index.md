@@ -206,6 +206,36 @@ Telegram id пользователя узнаем из заголовка.
 - 400 - параметр `roadmap_project` не передан или содержит неизвестный тип проекта
 - 403 - у пользователя нет роли `STUDENT`
 
+### Реализация пользователя по id
+
+`GET /api/project/projects/${:id}`
+
+Возвращает одну реализацию её автору. Используется на странице реализации.
+
+Telegram id пользователя узнаем из заголовка. Реализация должна принадлежать ему.
+
+Ответ в случае успеха: `200 OK`. Тело - реализация в формате ответа на `POST /api/project/project`:
+
+```
+{
+  "id": 42,
+  "author_telegram_user_id": 123,
+  "github_repository_url": "https://github.com/zhukovsd/currency-exchange",
+  "programming_language": "Java",
+  "roadmap_project": "CURRENCY_EXCHANGE",
+  "added_timestamp": 1773273600,
+  "deployment_url": "https://currency.zhukovsd.it" // null, если не указана
+}
+```
+
+- `deployment_url` - опциональное поле: `null`, если ссылка на деплой не указана. У типов проектов без деплоя (`HANGMAN`, `SIMULATION`, `OTHER`) всегда `null`
+
+Коды ошибок:
+
+- 500 - неизвестная ошибка
+- 403 - у пользователя нет роли `STUDENT`
+- 404 - реализация не найдена или принадлежит другому пользователю (не различаем, чтобы не раскрывать существование чужих реализаций)
+
 ### Изменение реализации пользователем
 
 `PATCH /api/project/projects/${:id}`
