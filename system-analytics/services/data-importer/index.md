@@ -3,13 +3,17 @@
 ## Необходимый контекст
 
 - [Бизнес аналитика](https://github.com/it-mentor-community-platform/meta/blob/main/business-analytics/functionality/data-import.md) импорта данных
+- [Системная аналитика](https://github.com/it-mentor-community-platform/meta/blob/main/system-analytics/functionality/data-import.md) импорта данных
+
 
 ## Стек
 
 - Spring Boot 3
 - [Google API Java Client](https://github.com/googleapis/google-api-java-client) для работы с Google Sheets API
+- Spring Kafka
+- Spring Data JDBC
+- Liquibase
 
-У сервиса нет своей БД.
 
 ## Взаимодействия
 
@@ -20,33 +24,41 @@
 
 Исходящие:
 
-- Запросы к REST эндпоинту [`POST /api/auth/internal/user`](https://github.com/it-mentor-community-platform/meta/blob/main/system-analytics/services/auth-service/index.md#%D0%B2%D0%BD%D1%83%D1%82%D1%80%D0%B5%D0%BD%D0%BD%D0%B8%D0%B9-%D1%8D%D0%BD%D0%B4%D0%BF%D0%BE%D0%B8%D0%BD%D1%82-%D0%B4%D0%BB%D1%8F-%D1%81%D0%BE%D0%B7%D0%B4%D0%B0%D0%BD%D0%B8%D1%8F-%D0%BF%D0%BE%D0%BB%D1%8C%D0%B7%D0%BE%D0%B2%D0%B0%D1%82%D0%B5%D0%BB%D0%B5%D0%B9) Auth Servic'а для создания пользователя
+- Запросы к REST эндпоинту [`POST /api/auth/internal/user`](https://github.com/it-mentor-community-platform/meta/blob/main/system-analytics/services/auth-service/index.md#%D0%B2%D0%BD%D1%83%D1%82%D1%80%D0%B5%D0%BD%D0%BD%D0%B8%D0%B9-%D1%8D%D0%BD%D0%B4%D0%BF%D0%BE%D0%B8%D0%BD%D1%82-%D0%B4%D0%BB%D1%8F-%D1%81%D0%BE%D0%B7%D0%B4%D0%B0%D0%BD%D0%B8%D1%8F-%D0%BF%D0%BE%D0%BB%D1%8C%D0%B7%D0%BE%D0%B2%D0%B0%D1%82%D0%B5%D0%BB%D0%B5%D0%B9) Auth Service для создания пользователя
+- Запросы к REST эндпоинту [`POST /api/profile/internal/profile`](https://github.com/it-mentor-community-platform/meta/blob/main/system-analytics/services/profile-service/index.md#%D0%B2%D0%BD%D1%83%D1%82%D1%80%D0%B5%D0%BD%D0%BD%D0%B8%D0%B9-%D1%8D%D0%BD%D0%B4%D0%BF%D0%BE%D0%B8%D0%BD%D1%82-%D0%B4%D0%BB%D1%8F-%D0%B8%D0%BC%D0%BF%D0%BE%D1%80%D1%82%D0%B0-%D0%BF%D1%80%D0%BE%D1%84%D0%B8%D0%BB%D1%8F) Profile Service для создания профиля
+- Запросы к REST эндпоинту [`POST /api/project/internal/project`](http://github.com/it-mentor-community-platform/meta/blob/main/system-analytics/services/project-service/index.md#%D0%B2%D0%BD%D1%83%D1%82%D1%80%D0%B5%D0%BD%D0%BD%D0%B8%D0%B9-%D1%8D%D0%BD%D0%B4%D0%BF%D0%BE%D0%B8%D0%BD%D1%82-%D0%B4%D0%BB%D1%8F-%D0%B4%D0%BE%D0%B1%D0%B0%D0%B2%D0%BB%D0%B5%D0%BD%D0%B8%D1%8F-%D0%BF%D1%80%D0%BE%D0%B5%D0%BA%D1%82%D0%B0-%D0%B8%D0%B7-telegram-%D0%B1%D0%BE%D1%82%D0%B0-%D0%B8%D0%BB%D0%B8-data-importer) Project Service для создания реализации проекта студента
+- Запросы к REST эндпоинту [`POST /api/project/internal/review`](https://github.com/it-mentor-community-platform/meta/blob/main/system-analytics/services/project-service/index.md#%D0%B2%D0%BD%D1%83%D1%82%D1%80%D0%B5%D0%BD%D0%BD%D0%B8%D0%B9-%D1%8D%D0%BD%D0%B4%D0%BF%D0%BE%D0%B8%D0%BD%D1%82-%D0%B4%D0%BB%D1%8F-%D0%B4%D0%BE%D0%B1%D0%B0%D0%B2%D0%BB%D0%B5%D0%BD%D0%B8%D1%8F-%D1%80%D0%B5%D0%B2%D1%8C%D1%8E-%D0%B8%D0%B7-data-importer) Project Service для создания ревью
+- Запросы к REST эндпоинту [`POST /api/mentor/internal/mentor`](https://github.com/it-mentor-community-platform/meta/blob/main/system-analytics/services/mentor-service/index.md#%D0%B2%D0%BD%D1%83%D1%82%D1%80%D0%B5%D0%BD%D0%BD%D0%B8%D0%B9-%D1%8D%D0%BD%D0%B4%D0%BF%D0%BE%D0%B8%D0%BD%D1%82-%D0%B4%D0%BB%D1%8F-%D0%B4%D0%BE%D0%B1%D0%B0%D0%B2%D0%BB%D0%B5%D0%BD%D0%B8%D1%8F-%D0%BC%D0%B5%D0%BD%D1%82%D0%BE%D1%80%D0%B0) Mentor Service для создания ментора
+- Запросы к REST эндпоинту [`POST /api/mentor/internal/guaranteed-review`](https://github.com/it-mentor-community-platform/meta/blob/main/system-analytics/services/mentor-service/index.md#%D0%B2%D0%BD%D1%83%D1%82%D1%80%D0%B5%D0%BD%D0%BD%D0%B8%D0%B9-%D1%8D%D0%BD%D0%B4%D0%BF%D0%BE%D0%B8%D0%BD%D1%82-%D0%B4%D0%BB%D1%8F-%D0%B4%D0%BE%D0%B1%D0%B0%D0%B2%D0%BB%D0%B5%D0%BD%D0%B8%D1%8F-%D1%86%D0%B5%D0%BD%D1%8B-%D0%BD%D0%B0-%D0%B3%D0%B0%D1%80%D0%B0%D0%BD%D1%82%D0%B8%D1%80%D0%BE%D0%B2%D0%B0%D0%BD%D0%BD%D0%BE%D0%B5-%D1%80%D0%B5%D0%B2%D1%8C%D1%8E) Mentor Service для создания условия на гарантирванное ревью
+- Запросы к REST эндпоинту [`POST /api/interval-repetition/internal/question`](https://github.com/it-mentor-community-platform/meta/blob/main/system-analytics/services/interval-repetition-service/index.md#%D0%B2%D0%BD%D1%83%D1%82%D1%80%D0%B5%D0%BD%D0%BD%D0%B8%D0%B9-%D1%8D%D0%BD%D0%B4%D0%BF%D0%BE%D0%B8%D0%BD%D1%82-%D0%B4%D0%BB%D1%8F-%D0%B8%D0%BC%D0%BF%D0%BE%D1%80%D1%82%D0%B0-%D0%B2%D0%BE%D0%BF%D1%80%D0%BE%D1%81%D0%B0) Interval Repetition Service для создания вопроса и связанной с ним категории
+ для создания пользователя
 
-## ER-диаграмма запуска импорта
 
-### Диаграмма
+
+## Схема БД
 
 ```mermaid
 erDiagram
-    ImportType ||--o{ ImportExecution : "имеет запуски импорта"
+    ImportType ||--o{ Import_Execution : "id = type_id"
 
     ImportType {
         bigint id PK
-        string code
+        string code "USERS, PROFILES, PROJECTS, ... QUESTIONS"
     }
 
-    ImportExecution {
+    Import_Execution {
         bigint id PK
-        bigint type FK
-        string status
-        bigint startedAt
-        bigint finishedAt
-        int successCount
-        int errorCount
-        string sourceReadStatus
+        bigint type_id FK
+        string status "RUNNING, FAILED, SUCCESS"
+        bigint started_at "Unix timestamp в секундах момента запуска импорта"
+        bigint finished_at "Unix timestamp в секундах момента окончания импорта"
+        int success_count "Количество успешно импортированых сущностей"
+        int error_count "Количество сущностей которое не удалось импортировать"
+        string source_read_status "FAILED, SUCCESS"
     }
 ```
-[Описание сущностей и связей](https://github.com/it-mentor-community-platform/meta/blob/main/system-analytics/services/data-importer/er-import-entities-and-relations.md)
+Индексы:
+- Индекс по `Import_Execution.status` для фильтрации по статусу
 
 ## Схема REST API
 
@@ -71,8 +83,6 @@ erDiagram
 `POST /api/data-importer/import`
 
 Запускает асинхронный импорт данных указанного типа.
-
-Тип импорта передаётся единственным полем в теле запроса.
 
 Тело запроса (`Content-Type: application/json`):
 
@@ -113,15 +123,9 @@ erDiagram
 
 `GET /api/data-importer/imports/{id}`
 
-Метод требует наличия роли `ADMIN`.
-
 Возвращает текущее состояние конкретного запуска импорта.
 
-`id` - идентификатор `ImportExecution`.
-
-Ответ в случае успеха: `200 OK`.
-
-Тело ответа (`Content-Type: application/json`):
+Ответ в случае успеха: `200 OK`. Тело (`Content-Type: application/json`):
 
 ```json
 {
@@ -136,82 +140,20 @@ erDiagram
 }
 ```
 
-Возможные значения `status`:
+Правила:
 
-- `RUNNING` - импорт выполняется;
-- `SUCCESS` - импорт завершён успешно;
-- `FAILED` - импорт завершён с ошибкой.
-
-Если импорт ещё выполняется, `finishedAt` имеет значение `null`.
-
-Пример:
-
-```json
-{
-  "id": 125,
-  "type": "USERS",
-  "status": "RUNNING",
-  "startedAt": 1761834600,
-  "finishedAt": null,
-  "successCount": 320,
-  "errorCount": 2,
-  "sourceReadStatus": "SUCCESS"
-}
-```
-
-`sourceReadStatus` содержит результат чтения источника данных.
-
-Если источник данных прочитан успешно:
-
-```text
-SUCCESS
-```
-
-Если получить данные из источника не удалось:
-
-```text
-FAILED
-```
-
-Пример импорта, завершившегося ошибкой при чтении источника:
-
-```json
-{
-  "id": 132,
-  "type": "USERS",
-  "status": "FAILED",
-  "startedAt": 1761834600,
-  "finishedAt": 1761834604,
-  "successCount": 0,
-  "errorCount": 0,
-  "sourceReadStatus": "FAILED"
-}
-```
-
-Если источник был успешно прочитан, но импорт завершился ошибкой на последующих этапах:
-
-```json
-{
-  "id": 133,
-  "type": "PROJECTS",
-  "status": "FAILED",
-  "startedAt": 1761834600,
-  "finishedAt": 1761834735,
-  "successCount": 120,
-  "errorCount": 1,
-  "sourceReadStatus": "SUCCESS"
-}
-```
-
-Статус `FAILED` в теле ответа характеризует результат выполнения самого импорта. При успешном получении информации о запуске HTTP-код ответа остаётся `200 OK`.
+- Если импорт ещё выполняется, поле `finishedAt` имеет значение `null`, поле `status` сохраняет состояние `RUNNING`.
+- `sourceReadStatus` содержит результат чтения источника данных. Может иметь два варианта значения:
+    - Если источник данных прочитан успешно: `SUCCESS`
+    - Если получить данные из источника не удалось: `FAILED`
+- Статус `FAILED` в теле ответа характеризует результат выполнения самого импорта. При успешном получении информации о запуске HTTP-код ответа остаётся `200 OK`.
 
 Коды ошибок:
 
-- `403` - у пользователя нет роли `ADMIN`;
-- `404` - запуск импорта с указанным `id` не найден;
-- `500` - неизвестная ошибка.
-i-updated.md…]()
-
+- `400` - передан не валидный параметр пути `id`, например, отрицательный, 
+- `403` - у пользователя нет роли `ADMIN`
+- `404` - запуск импорта с указанным `id` не найден
+- `500` - неизвестная ошибка
 
 ## Kafka
 
