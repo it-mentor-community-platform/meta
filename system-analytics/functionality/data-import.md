@@ -8,14 +8,15 @@
 ## Общие допущения
 
 - Все описанные ниже методы доступен только для админов, для простоты запускаем импорт асинхронно в пуле потоков, состоящем из одного потока.  Множественный запуск одновременных процессов импорта в распределённом окружении предотвращен сохранением каждого запуска импорта в БД, и не возможности запустить повторный, до завершения предыдущего 
+- Запуск и получение статуса импорта описаны в [схеме REST API](https://github.com/it-mentor-community-platform/meta/blob/main/system-analytics/services/data-importer/index.md#%D1%81%D1%85%D0%B5%D0%BC%D0%B0-rest-api) Data Importer. Результат запуска получаем через `GET /api/data-importer/imports/{id}` (статус, количество успешно и неуспешно импортированных сущностей, `sourceReadStatus`). Ошибка доступа к Google Spreadsheet таблице отражается там как `sourceReadStatus: FAILED`, а не как ошибка запуска
 
 ## Импорт пользователей
 
 ### Шаги
 
-- Запрос к `POST /api/data-importer/start-users-import` с ролью `ADMIN`
+- Запрос к `POST /api/data-importer/import` с телом `{"type": "USERS"}` и ролью `ADMIN`
 - Data Importer валидирует роль пользователя в заголовке `X-User-Roles`
-- В случае наличия нужной роли и доступа к Google Spreadsheet таблице Data Importer отвечает 200 на исходный запрос и запускает асинхронный процесс импорта данных
+- В случае наличия нужной роли и отсутствия выполняющегося импорта этого типа Data Importer создаёт запуск импорта (`RUNNING`), отвечает `202 Accepted` (с `Location: /api/data-importer/imports/{id}`) и запускает асинхронный процесс импорта данных
   - Открываем Google Spreadsheet таблицу, лист "Telegram аккаунты студентов"
   - Для каждого ряда, кроме заголовка, извлекаем Telegram User Id, определяем роль (об этом ниже)
   - Вызываем `POST /api/auth/internal/user`
@@ -39,9 +40,9 @@
 
 ### Шаги
 
-- Запрос к `POST /api/data-importer/start-mentors-import` с ролью `ADMIN`
+- Запрос к `POST /api/data-importer/import` с телом `{"type": "MENTORS"}` и ролью `ADMIN`
 - Data Importer валидирует роль пользователя в заголовке `X-User-Roles`
-- В случае наличия нужной роли и доступа к Google Spreadsheet таблице Data Importer отвечает 200 на исходный запрос и запускает асинхронный процесс импорта данных
+- В случае наличия нужной роли и отсутствия выполняющегося импорта этого типа Data Importer создаёт запуск импорта (`RUNNING`), отвечает `202 Accepted` (с `Location: /api/data-importer/imports/{id}`) и запускает асинхронный процесс импорта данных
   - Открываем таблицу
   - Для каждого ряда, начиная с 5, читаем Telegram user id, Telegram username, описание (опционально), языки программирования, услуги, имя ментора
     - Вызываем `POST /api/mentor/internal/mentor`
@@ -61,9 +62,9 @@
 
 ### Шаги
 
-- Запрос к `POST /api/data-importer/start-guaranteed-reviews-import` с ролью `ADMIN`
+- Запрос к `POST /api/data-importer/import` с телом `{"type": "GUARANTEED_REVIEWS"}` и ролью `ADMIN`
 - Data Importer валидирует роль пользователя в заголовке `X-User-Roles`
-- В случае наличия нужной роли и доступа к Google Spreadsheet таблице Data Importer отвечает 200 на исходный запрос и запускает асинхронный процесс импорта данных
+- В случае наличия нужной роли и отсутствия выполняющегося импорта этого типа Data Importer создаёт запуск импорта (`RUNNING`), отвечает `202 Accepted` (с `Location: /api/data-importer/imports/{id}`) и запускает асинхронный процесс импорта данных
   - Открываем таблицу
   - Для каждого ряда, начиная с 7, читаем Telegram url ментора, языки, цену
     - Для каждого языка делаем запрос `POST /api/mentor/internal/guaranteed-review`
@@ -90,10 +91,10 @@
 
 ### Шаги
 
-- Запрос к `POST /api/data-importer/start-questions-import` с ролью `ADMIN`
+- Запрос к `POST /api/data-importer/import` с телом `{"type": "QUESTIONS"}` и ролью `ADMIN`
 - Data Importer валидирует роль пользователя в заголовке `X-User-Roles`
 - Из конфигурации формируется список импортируемых таблиц
-- В случае наличия нужной роли и доступа к Google Spreadsheet таблицам Data Importer отвечает 200 на исходный запрос и запускает асинхронный процесс импорта данных:
+- В случае наличия нужной роли и отсутствия выполняющегося импорта этого типа Data Importer создаёт запуск импорта (`RUNNING`), отвечает `202 Accepted` (с `Location: /api/data-importer/imports/{id}`) и запускает асинхронный процесс импорта данных:
   - По очереди открываем Google Spreadsheet таблицы
   - Для каждой Google Spreadsheet таблицы по очереди открываем лист с названием "Ответы - \*", где "\*" - категория вопроса
   - Из названия извлекаем категорию
