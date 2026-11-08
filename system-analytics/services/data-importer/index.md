@@ -88,7 +88,7 @@ erDiagram
 
 ```json
 {
-  "type": "USERS"
+  "type": "USERS" // USERS, PROFILES, PROJECTS, REVIEWS, MENTORS, GUARANTEED_REVIEWS, QUESTIONS
 }
 ```
 
