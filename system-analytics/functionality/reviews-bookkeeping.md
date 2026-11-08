@@ -22,8 +22,8 @@
 
 ### Шаги
 
-- Администратор запускает импорт проектов через `POST /api/data-importer/start-reviews-import`
-- Data Importer читает проекты из [таблицы](https://docs.google.com/spreadsheets/d/1E66YrdvO7B_j0Ykge-JJDMtB1RfKhIzN_SsO7UPDbrU/edit?gid=0#gid=0) (лист "Reviews"). Для каждого окружения у нас своя копия таблицы
+- Администратор запускает импорт ревью через `POST /api/data-importer/import` с телом `{"type": "REVIEWS"}`
+- Data Importer читает ревью из [таблицы](https://docs.google.com/spreadsheets/d/1E66YrdvO7B_j0Ykge-JJDMtB1RfKhIzN_SsO7UPDbrU/edit?gid=0#gid=0) (лист "Reviews"). Для каждого окружения у нас своя копия таблицы
 - Data Importer вызывает эндпоинт `POST /api/project/internal/review`
 - Project Service сохраняет ревью в свою SQL БД
 - Project Service формирует Kafka сообщение для топика `reviews.review.created`. Тело содержит информацию о ревью и проекте
