@@ -83,12 +83,14 @@ erDiagram
 
 ### Получение публичного профиля текущего пользователя
 
-`GET /api/profile/profile/`
+`GET /api/profile/profile`
 
 Ответ в случае успеха: `200 OK`. Тело:
 
 ```
 {
+  "profile_id": 1,
+  "telegram_user_id": 1,
   "details": {
     "github_profile_url": "https://github.com/zhukovsd",
     "telegram_url": "https://t.me/zhukovsd",
@@ -103,6 +105,8 @@ erDiagram
 }
 ```
 
+Любое поле `details` может отсутствовать: у импортированного профиля может не быть `first_name` / `last_name`, у пользователя без username в Telegram - `telegram_url`.
+
 `achievements` - публично доступные ачивки текущего пользователя.
 
 Коды ошибок:
@@ -113,6 +117,8 @@ erDiagram
 ### Получение публичного профиля другого пользователя
 
 `GET /api/profile/profile/${:id}`
+
+`id` - идентификатор профиля (`Profiles.id`), не Telegram user id. Используется в ссылках на профиль: на сайте (`/profiles/<id>`) и в диплинке Mini App (`startapp=profile_<id>`).
 
 Ответ в случае успеха: `200 OK`. Тело аналогично профилю текущего пользователя.
 
