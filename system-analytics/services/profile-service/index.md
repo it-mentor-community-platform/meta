@@ -133,15 +133,19 @@ erDiagram
 
 `PATCH /api/profile/profile`
 
-Тело запроса (`Content-Type: application-json`)
+Тело запроса (`Content-Type: application/json`) - плоский объект с изменяемыми полями (`first_name`, `last_name`, `github_profile_url`), без вложенного `details`:
 ```
 {
-  "github_profile_url": "..."
+  "first_name": "Sergey",
+  "last_name": "Zhukov",
+  "github_profile_url": "https://github.com/zhukovsd"
 }
 ```
 
 Валидация:
-- Ссылка на GitHub профиль должна начинаться с "https://github.com/" и содержать валидный GitHub username после последнего слеша
+- Ссылка на GitHub профиль должна иметь вид `https://github.com/${:username}`, где username - валидный GitHub username (латинские буквы, цифры, дефис). Ссылка на репозиторий не принимается
+- `first_name` - непустая строка после обрезки пробелов, не длиннее 64 символов
+- `last_name` - не длиннее 64 символов, пустая строка очищает фамилию
 
 Ответ в случае успеха: `200 OK`. Тело - текущее состояние профиля пользователя (со всеми полями, а не только теми, что были переданы в PATCH запросе).
 
@@ -150,7 +154,7 @@ erDiagram
 - 400 - ошибки валидации (невалидные поля или значения)
 - 403 - попытка изменить "telegram_url"
 - 404 - профиль текущего пользователя не существует
-- 409 - профиль c ссылкой на переданный github уже существует
+- 409 - GitHub аккаунт уже привязан к другому профилю
 - 500 - неизвестная ошибка
 
 ### Получение списка всевозможных ачивок
@@ -186,7 +190,7 @@ erDiagram
 
 ### Управление видимостью ачивки в публичном профиле текущего пользователя
 
-`PATCH /api/profile/achievement/type=${:type}`
+`PATCH /api/profile/achievement/?type=${:type}`
 
 Тело запроса (`Content-Type: application/json`):
 
@@ -346,7 +350,7 @@ GET параметры:
 
 ### Consumer для топика `auth.user.created`
 
-Используется для инициализации профиля пользователя в таблице `Profiles` и заполнения начальных значений для деталей `telegram_url`, `gihub_profile_url`, `first_name`, `last_name`.
+Используется для инициализации профиля пользователя в таблице `Profiles` и заполнения начальных значений для деталей `telegram_url`, `github_profile_url`, `first_name`, `last_name`.
 
 Payload сообщения - https://github.com/it-mentor-community-platform/meta/blob/main/system-analytics/services/auth-service/index.md#kafka
 
@@ -354,7 +358,7 @@ Payload сообщения - https://github.com/it-mentor-community-platform/met
 
 Consumer group - `profile-service-cg`.
 
-Используется для актуализации профиля пользователя в таблице `Profiles`.
+Используется для актуализации профиля пользователя в таблице `Profiles`. `telegram_url` актуализируется всегда. `first_name` / `last_name` перезаписываются, только если пользователь ранее не редактировал имя в профиле и этих значений нет в БД.
 
 Payload сообщения - https://github.com/it-mentor-community-platform/meta/blob/main/system-analytics/services/auth-service/index.md#producer-%D0%B4%D0%BB%D1%8F-%D1%82%D0%BE%D0%BF%D0%B8%D0%BA%D0%B0-authuserauthenticated.
 
@@ -364,7 +368,7 @@ Consumer group - `profile-service-cg`.
 
 [Описание формата](https://github.com/it-mentor-community-platform/meta/blob/main/system-analytics/services/project-service/index.md#producer-%D0%B4%D0%BB%D1%8F-%D1%82%D0%BE%D0%BF%D0%B8%D0%BA%D0%B0-projectsprojectcreated) сообщения.
 
-Используется для добавления записи в таблицу `Projects`.
+Используется для добавления записи в таблицу `Projects` и для заполнения `github_profile_url` автора (по ссылке на репозиторий), если она ещё не установлена.
 
 ### Consumer для топика `projects.project.updated`
 
