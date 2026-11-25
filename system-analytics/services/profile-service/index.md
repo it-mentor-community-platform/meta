@@ -23,6 +23,7 @@ erDiagram
     }
 
     Profiles_Details {
+        bigint id PK
         bigint profile_id FK
         string detail_name
         string detail_value
